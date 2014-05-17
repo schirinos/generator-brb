@@ -1,0 +1,8 @@
+node_modules
+dist
+test/temp
+.DS_store
+.sass-cache
+<%= env.options.appPath %>/vendor
+.tmp
+test/vendor/
