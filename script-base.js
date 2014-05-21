@@ -68,7 +68,7 @@ Generator.prototype.getTemplateFramework = function getTemplateFramework() {
 };
 
 /*
- * Set the root folder for looking for templates to generate code from. Also set script suffix for generated files.
+ * Set the root folder to find templates to generate code from. Also set script suffix for generated files.
  * @return string
  */
 Generator.prototype.setupSourceRootAndSuffix = function setupSourceRootAndSuffix() {
