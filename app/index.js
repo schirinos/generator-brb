@@ -149,6 +149,13 @@ Generator.prototype.writeIndexWithRequirejs = function writeIndexWithRequirejs()
   ], {'data-main': 'js/main'});
 };
 
+Generator.prototype.createRequireJsAppFile = function createRequireJsAppFile() {
+    if (!this.includeRequireJS) {
+      return;
+    }
+    this.template('requirejs_app.js', this.env.options.appPath + '/js/main.js');
+};
+
 Generator.prototype.setupEnv = function setupEnv() {
   this.mkdir(this.env.options.appPath);
   this.mkdir(this.env.options.appPath + '/js');
