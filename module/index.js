@@ -48,7 +48,7 @@ function Generator() {
 
 util.inherits(Generator, scriptBase);
 
-Generator.prototype.createModelFiles = function createModelFiles() {
+Generator.prototype.createModelFiles = function createModelFiles(modPath) {
   if (this.base) {
     this.writeTemplate('baseModel', path.join(this.env.options.appPath + '/js/models', this.name));
   } else {

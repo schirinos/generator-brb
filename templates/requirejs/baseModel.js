@@ -1,34 +1,27 @@
-/**
-    A base model that all models in the app derive from. Implements some shared functionality
-    that the base Backbone models don't provide but our useful to this app.
-    @module app/models/base
-    @extends Backbone.Model
- */
+/*global define*/
+
 define([
-    'helpers/backbonePkg'
-],
-function(Backbone){
-    /**
-     * Constructor
-     * @constructor
-     */
-    var exports = Backbone.NestedModel.extend({
-        /**
-         * The options passed to the function
-         * @type {Object}
-         */
-        options : {},
-        /**
-         * Merge a specified set of options from the passed options object with properties on this object.
-         * @param {Object} options The options to pick from when merging.
-         * @param {Array} mergeOpts The option names to merge.
-         */
-        mergeOpts: function (options, mergeOpts) {
-            // Merge some passed options with default options
-            _.extend(this, _.pick(_.extend({}, options), mergeOpts));
+    'underscore',
+    'models/base'
+], function (_, Backbone) {
+    'use strict';
+
+    var <%= _.classify(name) %>Model = BaseModel.extend({
+        url: '',
+
+        initialize: function() {
+        },
+
+        defaults: {
+        },
+
+        validate: function(attrs, options) {
+        },
+
+        parse: function(response, options)  {
+            return response;
         }
     });
 
-    // Export module
-    return exports;
+    return <%= _.classify(name) %>Model;
 });
