@@ -126,6 +126,55 @@ Generator.prototype.packageJSON = function packageJSON() {
   this.template('_package.json', 'package.json');
 };
 
+Generator.prototype.setupEnv = function setupEnv() {
+  this.mkdir(this.env.options.appPath);
+  this.mkdir(this.env.options.appPath + '/js');
+  this.mkdir(this.env.options.appPath + '/vendor');
+  this.mkdir(this.env.options.appPath + '/css');
+  this.mkdir(this.env.options.appPath + '/less');
+  this.mkdir(this.env.options.appPath + '/img');
+  this.write(this.env.options.appPath + '/index.html', this.indexFile);
+};
+
+Generator.prototype.backbonePkg = function backbonePkg() {
+  this.ensureAppDir('js/helpers');
+  this.template('app/backbonePkg.js', path.join(this.env.options.appPath, 'js', 'helpers/backbonePkg.js'));
+};
+
+Generator.prototype.baseView = function baseView() {
+  this.ensureAppDir('js/views');
+  this.template('app/baseView.js', path.join(this.env.options.appPath, 'js', 'views/base.js'));
+};
+
+Generator.prototype.baseModel = function baseModel() {
+  this.ensureAppDir('js/models');
+  this.template('app/baseModel.js', path.join(this.env.options.appPath, 'js', 'models/base.js'));
+};
+
+Generator.prototype.baseCollection = function baseCollection() {
+  this.ensureAppDir('js/collections');
+  this.template('app/baseCollection.js', path.join(this.env.options.appPath, 'js', 'collections/base.js'));
+};
+
+Generator.prototype.vent = function vent() {
+  this.ensureAppDir('js/helpers');
+  this.template('app/vent.js', path.join(this.env.options.appPath, 'js', 'helpers/vent.js'));
+};
+
+Generator.prototype.appBase = function appBase() {
+  this.template('app/appBase.js', path.join(this.env.options.appPath, 'js', 'app.js'));
+};
+
+Generator.prototype.appRouter = function appRouter() {
+  this.ensureAppDir('js/routers');
+  this.template('app/appRouter.js', path.join(this.env.options.appPath, 'js', 'routers/app.js'));
+};
+
+Generator.prototype.appView = function appView() {
+  this.ensureAppDir('js/views');
+  this.template('app/appView.js', path.join(this.env.options.appPath, 'js', 'views/app.js'));
+};
+
 Generator.prototype.mainStylesheet = function mainStylesheet() {
   var contentText = [
     'body {\n    background: #fafafa;\n}',
@@ -154,16 +203,6 @@ Generator.prototype.createRequireJsAppFile = function createRequireJsAppFile() {
       return;
     }
     this.template('requirejs_app.js', this.env.options.appPath + '/js/main.js');
-};
-
-Generator.prototype.setupEnv = function setupEnv() {
-  this.mkdir(this.env.options.appPath);
-  this.mkdir(this.env.options.appPath + '/js');
-  this.mkdir(this.env.options.appPath + '/vendor/');
-  this.mkdir(this.env.options.appPath + '/css');
-  this.mkdir(this.env.options.appPath + '/less');
-  this.mkdir(this.env.options.appPath + '/img');
-  this.write(this.env.options.appPath + '/index.html', this.indexFile);
 };
 
 Generator.prototype.h5bp = function h5bp() {

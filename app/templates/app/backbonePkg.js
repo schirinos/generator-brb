@@ -3,7 +3,7 @@
     @module helpers/backbonePkg
  */
 define([
-    'backbone',
+    'backboneLib',
     'backboneStickit',
     'backboneNestedModel'
 ],

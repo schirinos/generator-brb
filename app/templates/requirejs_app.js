@@ -2,19 +2,22 @@
 'use strict';
 
 require.config({
-    shim: {<% if (compassBootstrap) { %>
+    shim: {
         bootstrap: {
             deps: ['jquery'],
             exports: 'jquery'
-        }<% } %><% if (templateFramework === 'handlebars') { %>,
+        }<% if (templateFramework === 'handlebars') { %>,
         handlebars: {
             exports: 'Handlebars'
         }<% } %>
     },
     paths: {
         jquery: '../vendor/jquery/dist/jquery',
-        backbone: '../vendor/backbone/backbone',
-        underscore: '../vendor/lodash/dist/lodash'<% if (compassBootstrap) { %>,
+        backboneLib: '../vendor/backbone/backbone',
+        backbone: 'helpers/backbonePkg',
+        backboneStickit: '../vendor/backbone.stickit/backbone.stickit',
+        backboneNestedModel: '../vendor/backbone-nested-model/backbone-nested',
+        underscore: '../vendor/underscore/underscore',<% if (compassBootstrap) { %>,
         bootstrap: '../vendor/sass-bootstrap/dist/js/bootstrap'<% } else {%>
        	bootstrap: '../vendor/bootstrap/dist/js/bootstrap'<% }%><% if (templateFramework === 'handlebars') { %>,
         handlebars: '../vendor/handlebars/handlebars'<% } %>
@@ -22,7 +25,8 @@ require.config({
 });
 
 require([
-    'backbone'
-], function (Backbone) {
-    Backbone.history.start();
+    'backbone',
+    'app'
+], function (Backbone, App) {
+    App.init('#app');
 });

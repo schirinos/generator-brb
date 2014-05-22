@@ -1,5 +1,6 @@
 'use strict';
 var path = require('path');
+var fs = require('fs');
 var util = require('util');
 var yeoman = require('yeoman-generator');
 var backboneUtils = require('./util.js');
@@ -93,4 +94,19 @@ Generator.prototype.writeTemplate = function writeTemplate(source, destination, 
  */
 Generator.prototype.generateTests = function generateTests() {
   return this.config.get('testFramework') === 'mocha' && !this.config.get('includeRequireJS');
+};
+
+/*
+ * Ensure directory exists in the main app path.
+ * @param String dir the directory to check existence for and to create if it doesn't exist
+ * @return boolean
+ */
+Generator.prototype.ensureAppDir = function ensureAppDir(dir) {
+  var pathToCreate = path.join(this.env.options.appPath, dir);
+
+  // Create directory if it is not there
+  if (!fs.existsSync(pathToCreate)) {
+    this.log.create(pathToCreate);
+    this.mkdir(pathToCreate);
+  }
 };
