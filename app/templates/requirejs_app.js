@@ -6,6 +6,9 @@ require.config({
         bootstrap: {
             deps: ['jquery'],
             exports: 'jquery'
+        },
+        backboneNestedModel: {
+            deps: ['backbone']
         }<% if (templateFramework === 'handlebars') { %>,
         handlebars: {
             exports: 'Handlebars'
@@ -17,6 +20,7 @@ require.config({
         backbone: 'helpers/backbonePkg',
         backboneStickit: '../vendor/backbone.stickit/backbone.stickit',
         backboneNestedModel: '../vendor/backbone-nested-model/backbone-nested',
+        tpl: '../vendor/requirejs-tpl/tpl',
         underscore: '../vendor/underscore/underscore',<% if (compassBootstrap) { %>,
         bootstrap: '../vendor/sass-bootstrap/dist/js/bootstrap'<% } else {%>
        	bootstrap: '../vendor/bootstrap/dist/js/bootstrap'<% }%><% if (templateFramework === 'handlebars') { %>,

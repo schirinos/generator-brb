@@ -5,9 +5,9 @@
  */
 define([
     'backbone',
-    'text!tpls/loading.html',
-    'text!tpls/alert.html',
-    'text!tpls/info.html'
+    'tpl!tpls/loading.html',
+    'tpl!tpls/alert.html',
+    'tpl!tpls/info.html'
     ],
 function(Backbone, TplLoading, TplAlert, TplInfo){
     /**
@@ -375,7 +375,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             this.hideLoading();
 
             // Compile template to html
-            var html = _.template(TplLoading, {msg: msgText});
+            var html = TplLoading({msg: msgText});
 
             // If we see this tag then we insert the loading message as its next sibiling
             var tag = this.$('[data-loading-location]');
@@ -414,11 +414,11 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             // If we see a this tag then we insert the loading message as its next sibiling
             var tag = this.$('[data-alert-location]');
             if (tag[0]) {
-                tag.after(_.template(TplAlert, {msg: msgText}));
+                tag.after(TplAlert({msg: msgText}));
 
             // Otherwise we just attach it to top of template
             } else {
-                this.$el.prepend(_.template(TplAlert, {msg: msgText}));
+                this.$el.prepend(TplAlert({msg: msgText}));
             }
         },
         /**
@@ -449,11 +449,11 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             // If we see a data-msg-info tag then we insert the message as its next sibiling
             var tag = this.$('[data-info-location]');
             if (tag[0]) {
-                tag.after(_.template(TplInfo, {msg: msgText}));
+                tag.after(TplInfo({msg: msgText}));
 
             // Otherwise we just attach it to top of template
             } else {
-                this.$el.prepend(_.template(TplInfo, {msg: msgText}));
+                this.$el.prepend(TplInfo({msg: msgText}));
 
                 // For callbacks
                 var self = this;

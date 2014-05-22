@@ -136,6 +136,13 @@ Generator.prototype.baseView = function baseView() {
   this.template('app/baseView.js', path.join(this.env.options.appPath, 'js', 'views/base.js'));
 };
 
+Generator.prototype.tpls = function tpls() {
+  this.ensureAppDir('js/tpls');
+  this.template('app/loading.html', path.join(this.env.options.appPath, 'js', 'tpls/loading.html'));
+  this.template('app/alert.html', path.join(this.env.options.appPath, 'js', 'tpls/alert.html'));
+  this.template('app/info.html', path.join(this.env.options.appPath, 'js', 'tpls/info.html'));
+};
+
 Generator.prototype.baseModel = function baseModel() {
   this.ensureAppDir('js/models');
   this.template('app/baseModel.js', path.join(this.env.options.appPath, 'js', 'models/base.js'));
