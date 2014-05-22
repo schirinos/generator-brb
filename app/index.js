@@ -126,16 +126,6 @@ Generator.prototype.packageJSON = function packageJSON() {
   this.template('_package.json', 'package.json');
 };
 
-Generator.prototype.setupEnv = function setupEnv() {
-  this.mkdir(this.env.options.appPath);
-  this.mkdir(this.env.options.appPath + '/js');
-  this.mkdir(this.env.options.appPath + '/vendor');
-  this.mkdir(this.env.options.appPath + '/css');
-  this.mkdir(this.env.options.appPath + '/less');
-  this.mkdir(this.env.options.appPath + '/img');
-  this.write(this.env.options.appPath + '/index.html', this.indexFile);
-};
-
 Generator.prototype.backbonePkg = function backbonePkg() {
   this.ensureAppDir('js/helpers');
   this.template('app/backbonePkg.js', path.join(this.env.options.appPath, 'js', 'helpers/backbonePkg.js'));
@@ -196,6 +186,16 @@ Generator.prototype.writeIndexWithRequirejs = function writeIndexWithRequirejs()
   this.indexFile = this.appendScripts(this.indexFile, 'js/main.js', [
     'vendor/requirejs/require.js'
   ], {'data-main': 'js/main'});
+};
+
+Generator.prototype.setupEnv = function setupEnv() {
+  this.mkdir(this.env.options.appPath);
+  this.mkdir(this.env.options.appPath + '/js');
+  this.mkdir(this.env.options.appPath + '/vendor');
+  this.mkdir(this.env.options.appPath + '/css');
+  this.mkdir(this.env.options.appPath + '/less');
+  this.mkdir(this.env.options.appPath + '/img');
+  this.write(this.env.options.appPath + '/index.html', this.indexFile);
 };
 
 Generator.prototype.createRequireJsAppFile = function createRequireJsAppFile() {
