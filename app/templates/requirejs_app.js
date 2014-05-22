@@ -16,8 +16,8 @@ require.config({
     },
     paths: {
         jquery: '../vendor/jquery/dist/jquery',
-        backboneLib: '../vendor/backbone/backbone',
-        backbone: 'helpers/backbonePkg',
+        backbone: '../vendor/backbone/backbone',
+        backbonePkg: 'helpers/backbonePkg',
         backboneStickit: '../vendor/backbone.stickit/backbone.stickit',
         backboneNestedModel: '../vendor/backbone-nested-model/backbone-nested',
         tpl: '../vendor/requirejs-tpl/tpl',
@@ -29,8 +29,7 @@ require.config({
 });
 
 require([
-    'backbone',
     'app'
-], function (Backbone, App) {
+], function (App) {
     App.init('#app');
 });

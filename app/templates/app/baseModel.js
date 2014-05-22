@@ -5,7 +5,7 @@
     @extends Backbone.Model
  */
 define([
-    'backbone'
+    'backbonePkg'
 ],
 function(Backbone){
     /**

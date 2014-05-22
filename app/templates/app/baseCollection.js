@@ -3,7 +3,7 @@
  * @exports app/collections/base
  */
 define([
-    'backbone'
+    'backbonePkg'
     ],
 function(Backbone){
     /**

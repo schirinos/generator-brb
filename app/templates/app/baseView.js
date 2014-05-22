@@ -4,7 +4,7 @@
     @extends Backbone.View
  */
 define([
-    'backbone',
+    'backbonePkg',
     'tpl!tpls/loading.html',
     'tpl!tpls/alert.html',
     'tpl!tpls/info.html'
