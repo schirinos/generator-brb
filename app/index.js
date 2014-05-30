@@ -105,6 +105,10 @@ Generator.prototype.git = function git() {
   this.copy('gitattributes', '.gitattributes');
 };
 
+Generator.prototype.vagrant = function vagrant() {
+  this.template('Vagrantfile', 'Vagrantfile');
+};
+
 Generator.prototype.bower = function bower() {
   this.template('bowerrc', '.bowerrc');
   this.copy('_bower.json', 'bower.json');
