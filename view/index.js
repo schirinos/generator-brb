@@ -8,11 +8,22 @@ module.exports = Generator;
 
 function Generator() {
   scriptBase.apply(this, arguments);
-  var dirPath = '../templates';
-  this.sourceRoot(path.join(__dirname, dirPath));
+
+  // Location to write view
+  this.option('path', {
+    type: String,
+    required: false,
+    defaults: '/views'
+  });
+
+  // Set whether to use custom base for view
+  this.option('base', {
+    type: Boolean,
+    defaults: true
+  });
 
   var testOptions = {
-    as: 'view',
+    as: 'collection`',
     args: [this.name],
     options: {
       ui: this.config.get('ui')
@@ -28,9 +39,20 @@ function Generator() {
 util.inherits(Generator, scriptBase);
 
 Generator.prototype.createViewFiles = function createViewFiles() {
+  var viewPath = this.options.path;
   var templateFramework = this.getTemplateFramework();
   var templateExt = '.html';
-  this.jst_path = this.env.options.appPath + '/js/templates/' + this.name + templateExt;
-  this.template('view.html', this.jst_path);
-  this.writeTemplate('view', path.join(this.env.options.appPath + '/js/views', this.name));
+  this.templatePath = path.join(this.options.path, '../tpls', this.name + templateExt);
+
+
+  console.log(this.templatePath);
+  // Create either standard backbone view or our custom augmented view
+  if (this.options.base) {
+    this.writeTemplate('baseView', path.join(this.env.options.appPath, '/js', viewPath, this.name));
+  } else {
+    this.writeTemplate('view', path.join(this.env.options.appPath, '/js', viewPath, this.name));
+  }
+
+  // Write template file for the view
+  this.template('view.html', path.join(this.env.options.appPath, '/js', this.templatePath));
 };

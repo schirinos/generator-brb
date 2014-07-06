@@ -9,27 +9,17 @@ module.exports = Generator;
 function Generator() {
   scriptBase.apply(this, arguments);
 
-  // XXX default and banner to be implemented
-  this.argument('attributes', {
-    type: Array,
-    defaults: [],
-    banner: 'field[:type] field[:type]'
+  // Location to write model
+  this.option('path', {
+    type: String,
+    required: false,
+    defaults: '/models'
   });
 
-  // Basemodel or standard model
-  this.argument('base', {
-    type: boolean,
-    defaults: true,
-    banner: 'base[true|false]'
-  });
-
-  // parse back the attributes provided, build an array of attr
-  this.attrs = this.attributes.map(function (attr) {
-    var parts = attr.split(':');
-    return {
-      name: parts[0],
-      type: parts[1] || 'string'
-    };
+  // Set whether to use custom base for model
+  this.option('base', {
+    type: Boolean,
+    defaults: true
   });
 
   var testOptions = {
@@ -43,15 +33,17 @@ function Generator() {
   if (this.generateTests()) {
     this.hookFor('backbone-mocha', testOptions);
   }
-
 }
 
 util.inherits(Generator, scriptBase);
 
 Generator.prototype.createModelFiles = function createModelFiles() {
-  if (this.base) {
-    this.writeTemplate('baseModel', path.join(this.env.options.appPath + '/js/models', this.name));
+  // path to write file
+  var modelPath = this.options.path;
+
+  if (this.options.base) {
+    this.writeTemplate('baseModel', path.join(this.env.options.appPath, '/js', modelPath, this.name));
   } else {
-    this.writeTemplate('model', path.join(this.env.options.appPath + '/js/models', this.name));
+    this.writeTemplate('model', path.join(this.env.options.appPath, '/js', modelPath, this.name));
   }
 };

@@ -4,11 +4,12 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var scriptBase = require('../script-base');
 var backboneUtils = require('../util.js');
+var exec = require('child_process').exec;
 
 var Generator = module.exports = function Generator(args, options, config) {
   yeoman.generators.Base.apply(this, arguments);
 
-  // Get name of application, we use this as the namespace for the 
+  // Get name of application, we use this as the namespace for the
   // modules we create.
   this.argument('appname', { type: String, required: false });
   this.appname = this.appname || path.basename(process.cwd());
@@ -17,12 +18,15 @@ var Generator = module.exports = function Generator(args, options, config) {
   // Set path for the app front-end code
   this.env.options.appPath = this.options.appPath || 'src/public';
   this.config.set('appPath', this.env.options.appPath);
+  this.config.set('serverPath', 'src/server');
+  this.config.set('projectRoot', path.join(__dirname, '../'));
 
   // setup the test-framework property, Gruntfile template will need this
   this.testFramework = this.options['test-framework'] || 'mocha';
   this.templateFramework = this.options['template-framework'] || 'lodash';
 
-  if (this.options.namespace === 'backbone:app') {
+  // Enable test framework setup if we are setting up the full app
+  if (this.options.namespace === 'brb:app') {
     this.hookFor(this.testFramework, {
       as: 'app',
       options: {
@@ -39,14 +43,15 @@ var Generator = module.exports = function Generator(args, options, config) {
     testFramework: this.testFramework,
     templateFramework: this.templateFramework,
     compassBootstrap: this.compassBootstrap,
-    includeRequireJS: this.includeRequireJS
+    includeRequireJS: this.options.requirejs,
+    includeVagrant: this.options.vagrant
   });
 
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
 
   // Execute steps after scafolding finishes
   this.on('end', function () {
-    if (this.options.namespace === 'backbone:app') {
+    if (this.options.namespace === 'brb:app') {
 
       // If we are in a test directory, go one up
       if (/^.*test$/.test(process.cwd())) {
@@ -77,6 +82,10 @@ Generator.prototype.askFor = function askFor() {
       name: 'Bootstrap for Sass',
       value: 'compassBootstrap',
       checked: false
+    },{
+      name: 'Vagrant',
+      value: 'vagrant',
+      checked: false
     }]
   }];
 
@@ -89,13 +98,14 @@ Generator.prototype.askFor = function askFor() {
     // manually deal with the response, get back and store the results.
     // we change a bit this way of doing to automatically do this in the self.prompt() method.
     this.compassBootstrap = hasFeature('compassBootstrap');
+    this.vagrant = hasFeature('vagrant');
     this.includeRequireJS = true;
-    this.config.set('compassBootstrap', this.compassBootstrap);
 
-    if (!this.options.requirejs) {
-      this.options.requirejs = this.includeRequireJS;
-      this.config.set('includeRequireJS', this.includeRequireJS);
-    }
+    // Set prompts
+    this.config.set('compassBootstrap', this.compassBootstrap);
+    this.config.set('vagrant', this.vagrant);
+    this.config.set('includeRequireJS', this.includeRequireJS);
+
     cb();
   }.bind(this));
 };
@@ -106,7 +116,14 @@ Generator.prototype.git = function git() {
 };
 
 Generator.prototype.vagrant = function vagrant() {
+  if (!this.vagrant) {
+    return;
+  }
+
   this.template('Vagrantfile', 'Vagrantfile');
+  this.mkdir('vagrant/puppet/modules');
+  this.mkdir('vagrant/puppet/manifests');
+  this.template('Puppetfile', 'vagrant/puppet/Puppetfile');
 };
 
 Generator.prototype.bower = function bower() {
@@ -177,13 +194,7 @@ Generator.prototype.appView = function appView() {
 };
 
 Generator.prototype.mainStylesheet = function mainStylesheet() {
-  var contentText = [
-    'body {\n    background: #fafafa;\n}',
-    '\n.hero-unit {\n    margin: 50px auto 0 auto;\n    width: 300px;\n}'
-  ];
-  var ext = '.css';
-  this.write(this.env.options.appPath + '/css/main' + ext, contentText.join('\n'));
-
+  this.template('main.css', this.env.options.appPath + '/css/main.css');
   this.template('main.less', this.env.options.appPath + '/less/main.less');
 };
 

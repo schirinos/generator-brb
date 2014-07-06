@@ -8,11 +8,22 @@ module.exports = Generator;
 
 function Generator() {
   scriptBase.apply(this, arguments);
-  var dirPath = '../templates';
-  this.sourceRoot(path.join(__dirname, dirPath));
+
+  // Location to write collection
+  this.option('path', {
+    type: String,
+    required: false,
+    defaults: '/collections'
+  });
+
+  // Set whether to use custom base for model
+  this.option('base', {
+    type: Boolean,
+    defaults: true
+  });
 
   var testOptions = {
-    as: 'collection',
+    as: 'collection`',
     args: [this.name],
     options: {
       ui: this.config.get('ui')
@@ -28,5 +39,12 @@ function Generator() {
 util.inherits(Generator, scriptBase);
 
 Generator.prototype.createControllerFiles = function createControllerFiles() {
-  this.writeTemplate('collection', path.join(this.env.options.appPath + '/js/collections', this.name)); 
+  // path to write file
+  var collPath = this.options.path;
+
+  if (this.options.base) {
+    this.writeTemplate('baseCollection', path.join(this.env.options.appPath, '/js', collPath, this.name));
+  } else {
+    this.writeTemplate('collection', path.join(this.env.options.appPath, '/js', collPath, this.name));
+  }
 };

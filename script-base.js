@@ -8,18 +8,20 @@ var backboneUtils = require('./util.js');
 var Generator = module.exports = function Generator() {
   yeoman.generators.NamedBase.apply(this, arguments);
 
-  // Get name of application, we use this as the namespace for the 
+  // Get name of application, we use this as the namespace for the
   // modules we create.
   this.appname = this.config.get('appName') || path.basename(process.cwd());
 
-  // Set the path for the application files
+  // Set needed paths
   this.env.options.appPath = this.config.get('appPath') || 'src/public';
+  this.env.options.serverPath = this.config.get('appPath') || 'src/server';
+  this.env.options.projectRoot = __dirname;
 
   // check if --requirejs option provided or if require is setup
   if (typeof this.env.options.requirejs === 'undefined') {
     this.option('requirejs');
     this.options.requirejs = true; // always force requirejs
-    
+
     this.env.options.requirejs = this.options.requirejs;
   }
 
