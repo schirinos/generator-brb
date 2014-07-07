@@ -15,10 +15,11 @@ var Generator = module.exports = function Generator(args, options, config) {
   this.appname = this.appname || path.basename(process.cwd());
   this.appname = backboneUtils.classify(this.appname);
 
-  // Set path for the app front-end code
+  // Set paths for the app
   this.env.options.appPath = this.options.appPath || 'src/public';
   this.config.set('appPath', this.env.options.appPath);
-  this.config.set('serverPath', 'src/server');
+  this.env.options.serverPath = this.options.serverPath || 'src/server';
+  this.config.set('serverPath', this.env.options.serverPath);
   this.config.set('projectRoot', path.join(__dirname, '../'));
 
   // setup the test-framework property, Gruntfile template will need this
@@ -44,7 +45,8 @@ var Generator = module.exports = function Generator(args, options, config) {
     templateFramework: this.templateFramework,
     compassBootstrap: this.compassBootstrap,
     includeRequireJS: this.options.requirejs,
-    includeVagrant: this.options.vagrant
+    includeVagrant: this.options.vagrant,
+    useServer: false
   });
 
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
@@ -86,6 +88,10 @@ Generator.prototype.askFor = function askFor() {
       name: 'Vagrant',
       value: 'vagrant',
       checked: false
+    },{
+      name: 'nodejs Server',
+      value: 'useServer',
+      checked: false
     }]
   }];
 
@@ -99,11 +105,13 @@ Generator.prototype.askFor = function askFor() {
     // we change a bit this way of doing to automatically do this in the self.prompt() method.
     this.compassBootstrap = hasFeature('compassBootstrap');
     this.vagrant = hasFeature('vagrant');
+    this.useServer = hasFeature('useServer');
     this.includeRequireJS = true;
 
     // Set prompts
     this.config.set('compassBootstrap', this.compassBootstrap);
     this.config.set('vagrant', this.vagrant);
+    this.config.set('useServer', this.useServer);
     this.config.set('includeRequireJS', this.includeRequireJS);
 
     cb();
@@ -218,6 +226,13 @@ Generator.prototype.setupEnv = function setupEnv() {
   this.mkdir(this.env.options.appPath + '/less');
   this.mkdir(this.env.options.appPath + '/img');
   this.write(this.env.options.appPath + '/index.html', this.indexFile);
+
+  if (this.useServer) {
+    this.mkdir(this.env.options.serverPath);
+    this.template('app/server.js', path.join(this.env.options.serverPath, 'server.js'));
+    this.template('app/routes.js', path.join(this.env.options.serverPath, 'routes.js'));
+    this.template('app/config.js', path.join(this.env.options.serverPath, 'config.js'));
+  }
 };
 
 Generator.prototype.createRequireJsAppFile = function createRequireJsAppFile() {

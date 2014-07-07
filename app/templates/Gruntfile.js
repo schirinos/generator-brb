@@ -6,58 +6,89 @@ var mountFolder = function (connect, dir) {
     return connect.static(require('path').resolve(dir));
 };
 
-// # Globbing
-// for performance reasons we're only matching one level down:
-// 'test/spec/{,*/}*.js'
-// use this if you want to match all subfolders:
-// 'test/spec/**/*.js'
-// templateFramework: '<%= templateFramework %>'
-
 module.exports = function (grunt) {
     // show elapsed time at the end
     require('time-grunt')(grunt);
-    // load all grunt tasks
+
+    // Automatically load all grunt tasks by reading from package.json
     require('load-grunt-tasks')(grunt);
 
-    // configurable paths
-    var yeomanConfig = {
-        app: '<%= env.options.appPath %>',
+    // Configurable paths
+    var appConfig = {
+        pub: '<%= env.options.appPath %>'<% if (useServer) { %>,
+        server: '<%= env.options.serverPath %>'<% } %>,
         dist: 'dist'
     };
 
     grunt.initConfig({
-        yeoman: yeomanConfig,
+        appConfig: appConfig,
         watch: {
+            // Default options for all watch tasks
             options: {
                 nospawn: true,
                 livereload: true
-            },<% if (compassBootstrap) { %>
-            compass: {
-                files: ['<%%= yeoman.app %>/sass/{,*/}*.{scss,sass}'],
-                tasks: ['compass']
-            },<% } else { %>
+            },
+            // Prevent livereload when compiling less, so that we don't force a browser refresh
             less: {
-                files: ['<%%= yeoman.app %>/less/{,*/}*.{less}'],
+                options: {
+                    livereload: false
+                },
+                files: ['<%%= appConfig.pub %>/less/{,*/}*.less'],
                 tasks: ['less']
-            },<% } %>
-            livereload: {
+            },
+            css: {
+                options: {
+                    livereload: grunt.option('livereloadport') || LIVERELOAD_PORT
+                },
+                files: ['{.tmp,<%%= appConfig.pub %>}/css/{,*/}*.css']
+            },
+            frontend: {
                 options: {
                     livereload: grunt.option('livereloadport') || LIVERELOAD_PORT
                 },
                 files: [
-                    '<%%= yeoman.app %>/*.html',
-                    '{.tmp,<%%= yeoman.app %>}/css/{,*/}*.css',
-                    '{.tmp,<%%= yeoman.app %>}/js/{,*/}*.{js,html,tpl,mustache,hbs}',
-                    '{.tmp,<%%= yeoman.app %>}/vendor/{,*/}*.js',
-                    '<%%= yeoman.app %>/img/{,*/}*.{png,jpg,jpeg,gif,webp}',
+                    '<%%= appConfig.pub %>/*.html',
+                    '{.tmp,<%%= appConfig.pub %>}/js/{,*/}*.{js,html,tpl,mustache,hbs}',
+                    '{.tmp,<%%= appConfig.pub %>}/vendor/{,*/}*.js',
+                    '<%%= appConfig.pub %>/img/{,*/}*.{png,jpg,jpeg,gif,webp}',
                     'test/spec/**/*.js'
                 ]
-            },
+            }<% if (useServer) { %>,
+            // For the express server reload we don't need to livereload the page
+            // since the express server serves the backend api
+            express: {
+                options: {
+                    nospawn: true,
+                    atBegin: true,
+                    livereload: false
+                },
+                files: ['<%%= appConfig.server %>/{,*/}*.js'],
+                tasks:  ['express:dev']
+            }<% } %>,
             test: {
-                files: ['<%%= yeoman.app %>/js/{,*/}*.js', 'test/spec/**/*.js'],
+                files: ['<%%= appConfig.server %>/{,*/}*.js', '<%%= appConfig.pub %>/js/{,*/}*.js', 'test/spec/**/*.js'],
                 tasks: ['test:true']
             }
-        },
+        }<% if (useServer) { %>,
+        // Load the express server to provide api access
+        // server also handles static files
+        express: {
+            options: {
+                background: true,
+                port: 3000
+            },
+            dev: {
+                options: {
+                    script: '<%%= appConfig.server %>/server.js'
+                }
+            },
+            dist: {
+                options: {
+                    background: false,
+                    script: '<%%= appConfig.dist %>/server/server.js'
+                }
+            }
+        }<% } %>,
         connect: {
             options: {
                 port: grunt.option('port') || SERVER_PORT,
@@ -70,7 +101,7 @@ module.exports = function (grunt) {
                         return [
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
-                            mountFolder(connect, yeomanConfig.app)
+                            mountFolder(connect, appConfig.pub)
                         ];
                     }
                 }
@@ -83,7 +114,7 @@ module.exports = function (grunt) {
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
                             mountFolder(connect, 'test'),
-                            mountFolder(connect, yeomanConfig.app)
+                            mountFolder(connect, appConfig.pub)
                         ];
                     }
                 }
@@ -92,22 +123,33 @@ module.exports = function (grunt) {
                 options: {
                     middleware: function (connect) {
                         return [
-                            mountFolder(connect, yeomanConfig.dist)
+                            mountFolder(connect, appConfig.dist + '/public')
                         ];
                     }
                 }
             }
         },
         open: {
+            <% if (useServer) { %>
             server: {
-                path: 'http://localhost:<%%= connect.options.port %>'
-            },
+                path: 'http://localhost:<%%= express.options.port %>',
+                options: {
+                    delay: 1000
+                }
+            }<%} else {%>
+            server: {
+                path: 'http://localhost:<%%= connect.options.port %>',
+                options: {
+                    delay: 1000
+                }
+            }
+            <%}%>,
             test: {
                 path: 'http://localhost:<%%= connect.test.options.port %>'
             }
         },
         clean: {
-            dist: ['.tmp', '<%%= yeoman.dist %>/*'],
+            dist: ['.tmp', '<%%= appConfig.dist %>/*'],
             server: '.tmp'
         },
         jshint: {
@@ -117,8 +159,8 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%%= yeoman.app %>/js/{,*/}*.js',
-                '!<%%= yeoman.app %>/vendor/*',
+                '<%%= appConfig.pub %>/js/{,*/}*.js',
+                '!<%%= appConfig.pub %>/vendor/*',
                 'test/spec/{,*/}*.js'
             ]
         }<% if (testFramework === 'mocha') { %>,
@@ -132,14 +174,14 @@ module.exports = function (grunt) {
         }<% } else { %>,
         jasmine: {
             all:{
-                src : '<%= yeoman.app %>/scripts/{,*/}*.js',
+                src : '<%%= appConfig.pub %>/scripts/{,*/}*.js',
                 options: {
                     keepRunner: true,
                     specs : 'test/spec/**/*.js',
                     vendor : [
-                        '<%%= yeoman.app %>/bower_components/jquery/dist/jquery.js',
-                        '<%%= yeoman.app %>/bower_components/underscore/underscore.js',
-                        '<%%= yeoman.app %>/bower_components/backbone/backbone.js',
+                        '<%%= appConfig.pub %>/bower_components/jquery/dist/jquery.js',
+                        '<%%= appConfig.pub %>/bower_components/underscore/underscore.js',
+                        '<%%= appConfig.pub %>/bower_components/backbone/backbone.js',
                         '.tmp/scripts/templates.js'
                     ]
                 }
@@ -147,12 +189,12 @@ module.exports = function (grunt) {
         }<% } %>,<% if (compassBootstrap) { %>
         compass: {
             options: {
-                sassDir: '<%%= yeoman.app %>/sass',
+                sassDir: '<%%=appConfig.pub %>/sass',
                 cssDir: '.tmp/styles',
-                imagesDir: '<%%= yeoman.app %>/img',
-                javascriptsDir: '<%%= yeoman.app %>/js',
-                fontsDir: '<%%= yeoman.app %>/css/fonts',
-                importPath: '<%%= yeoman.app %>/vendor',
+                imagesDir: '<%%=appConfig.pub %>/img',
+                javascriptsDir: '<%%=appConfig.pub %>/js',
+                fontsDir: '<%%=appConfig.pub %>/css/fonts',
+                importPath: '<%%=appConfig.pub %>/vendor',
                 relativeAssets: true
             },
             dist: {},
@@ -165,7 +207,7 @@ module.exports = function (grunt) {
         less: {
             development: {
                 files: {
-                    '<%%= yeoman.app %>/css/main.css': '<%%= yeoman.app %>/less/main.less'
+                    '<%%= appConfig.pub %>/css/main.css': '<%%= appConfig.pub %>/less/main.less'
                 }
             }
         },
@@ -173,54 +215,52 @@ module.exports = function (grunt) {
             dist: {
                 // Options: https://github.com/jrburke/r.js/blob/master/build/example.build.js
                 options: {
-                    baseUrl: '<%%= yeoman.app %>/js',
-                    optimize: 'none',
-                    wrapShim: true,
-                    paths: {
-                        'jquery': '../../<%%= yeoman.app %>/vendor/jquery/dist/jquery',
-                        'underscore': '../../<%%= yeoman.app %>/vendor/underscore/underscore',
-                        'backbone': '../../<%%= yeoman.app %>/vendor/backbone/backbone'
+                    almond: true,
+                    // replace require script calls, with the almond modules
+                    // in the following files
+                    replaceRequireScript: [{
+                        files: ['<%%= appConfig.dist %>/public/index.html'],
+                        module: 'main'
+                    }],
+                    baseUrl: '<%%= appConfig.pub %>/js',
+                    mainConfigFile: "<%%= appConfig.pub %>/js/main.js",
+                    include: ["main"],
+                    out: "<%%= appConfig.dist %>/public/js/main.js",
+                    // Modify some modules as we optimize them
+                    onBuildWrite   : function( name, path, contents ) {
+                        // Backbone.NestedModel needs to be upgraded to an AMD
+                        // module since by default it looks for Backbone as a global.
+                        // An optimized build will fail since the global isn't created until
+                        // the dependency is needed by a module
+                        if (name === 'backboneNestedModel') {
+                            return "define('"+name+"', ['backbone'],function(Backbone){"+contents+"})";
+                        } else {
+                            // Return module unmodifed
+                            return contents;
+                        }
                     },
-                    // TODO: Figure out how to make sourcemaps work with grunt-usemin
-                    // https://github.com/yeoman/grunt-usemin/issues/30
-                    //generateSourceMaps: true,
-                    // required to support SourceMaps
-                    // http://requirejs.org/docs/errors.html#sourcemapcomments
                     preserveLicenseComments: false,
-                    useStrict: true<% if (templateFramework !== 'handlebars') { %>,
-                    wrap: true<% } %>
+                    useStrict: false,
+                    wrap: true
                 }
-            }
-        },
-        useminPrepare: {
-            html: '<%%= yeoman.app %>/index.html',
-            options: {
-                dest: '<%%= yeoman.dist %>'
-            }
-        },
-        usemin: {
-            html: ['<%%= yeoman.dist %>/{,*/}*.html'],
-            css: ['<%%= yeoman.dist %>/css/{,*/}*.css'],
-            options: {
-                dirs: ['<%%= yeoman.dist %>']
             }
         },
         imagemin: {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= yeoman.app %>/img',
+                    cwd: '<%%= appConfig.pub %>/img',
                     src: '{,*/}*.{png,jpg,jpeg}',
-                    dest: '<%%= yeoman.dist %>/img'
+                    dest: '<%%= appConfig.dist %>/public/img'
                 }]
             }
         },
         cssmin: {
             dist: {
                 files: {
-                    '<%%= yeoman.dist %>/css/main.css': [
+                    '<%%= appConfig.dist %>/public/css/main.css': [
                         '.tmp/styles/{,*/}*.css',
-                        '<%%= yeoman.app %>/css/{,*/}*.css'
+                        '<%%= appConfig.pub %>/css/{,*/}*.css'
                     ]
                 }
             }
@@ -240,82 +280,97 @@ module.exports = function (grunt) {
                 },
                 files: [{
                     expand: true,
-                    cwd: '<%%= yeoman.app %>',
+                    cwd: '<%%= appConfig.pub %>',
                     src: '*.html',
-                    dest: '<%%= yeoman.dist %>'
+                    dest: '<%%= appConfig.dist %>/public/'
                 }]
             }
         },
+        // Copies additional files to distrubution folder (other than .html and css files)
         copy: {
             dist: {
                 files: [{
                     expand: true,
                     dot: true,
-                    cwd: '<%%= yeoman.app %>',
-                    dest: '<%%= yeoman.dist %>',
+                    cwd: '<%%= appConfig.pub %>',
+                    dest: '<%%= appConfig.dist %>/public',
                     src: [
                         '*.{ico,txt}',
                         '.htaccess',
                         'img/{,*/}*.{webp,gif}',
-                        'css/fonts/{,*/}*.*',<% if (compassBootstrap) { %>
-                        'vendor/sass-bootstrap/fonts/*.*'<% } else { %>
-                        'vendor/bootstrap/fonts/*.*'<% } %>
+                        'vendor/sp-bootstrap/fonts/*.*'
                     ]
-                }]
+                }<% if (useServer) { %>,{
+                    expand: true,
+                    dot: true,
+                    cwd: '<%%= appConfig.server %>',
+                    dest: '<%%= appConfig.dist %>/server',
+                    src: [
+                        '*'
+                    ]
+                }<%}%>]
             }
         },
         bower: {
-            all: {
-                rjsConfig: '<%%= yeoman.app %>/js/main.js'
-            }
-        },
-        rev: {
-            dist: {
-                files: {
-                    src: [
-                        '<%%= yeoman.dist %>/js/{,*/}*.js',
-                        '<%%= yeoman.dist %>/css/{,*/}*.css',
-                        '<%%= yeoman.dist %>/img/{,*/}*.{png,jpg,jpeg,gif,webp}',
-                        '<%= yeoman.dist %>/css/fonts/{,*/}*.*',<% if (compassBootstrap) { %>
-                        'vendor/sass-bootstrap/fonts/*.*'<% } %>
-                    ]
-                }
+            app: {
+                rjsConfig: '<%%= appConfig.pub %>/js/main.js'
             }
         }
     });
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
+            <% if (useServer) { %>
+                return grunt.task.run(['build', 'open:server', 'express:dev']);
+            <%} else {%>
+                return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
+            <%}%>
         }
 
-        if (target === 'test') {
-            return grunt.task.run([
-                'clean:server',<% if (compassBootstrap) { %>
-                'compass:server',<% } %>
-                'connect:test',
-                'open:test',
+        <% if (useServer) { %>
+            if (target === 'test') {
+                return grunt.task.run([
+                    'clean:server',
+                    'connect:test',
+                    'open:test',
+                    'watch'
+                ]);
+            }
+        <%} else {%>
+            if (target === 'test') {
+                return grunt.task.run([
+                    'clean:server',<% if (compassBootstrap) { %>
+                    'compass:server',<% } %>
+                    'connect:test',
+                    'open:test',
+                    'watch'
+                ]);
+            }
+        <%}%>
+
+        <% if (useServer) { %>
+            grunt.task.run([
+                'clean:server',
+                'open:server',
                 'watch'
             ]);
-        }
-
-        grunt.task.run([
-            'clean:server',<% if (compassBootstrap) { %>
-            'compass:server',<% } %>
-            'connect:livereload',
-            'open:server',
-            'watch'
-        ]);
+        <%} else {%>
+            grunt.task.run([
+                'clean:server',<% if (compassBootstrap) { %>
+                'compass:server',<% } %>
+                'connect:livereload',
+                'open:server',
+                'watch'
+            ]);
+        <%}%>
     });
 
     grunt.registerTask('test', function (isConnected) {
         isConnected = Boolean(isConnected);
         var testTasks = [
-                'clean:server',<% if (compassBootstrap) { %>
-                'compass',<% } %><% if(testFramework === 'mocha') { %>
+                'clean:server',
                 'connect:test',
-                'mocha',<% } else { %>
-                'jasmine'<% } %>
+                'mocha',
             ];
 
         if(!isConnected) {
@@ -330,17 +385,12 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',<% if (compassBootstrap) { %>
         'compass:dist',<% } %>
-        'useminPrepare',
+        'htmlmin',
         'requirejs',
         'less',
         'imagemin',
-        'htmlmin',
-        'concat',
         'cssmin',
-        'uglify',
-        'copy',
-        'rev',
-        'usemin'
+        'copy'
     ]);
 
     grunt.registerTask('default', [
