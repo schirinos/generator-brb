@@ -201,6 +201,11 @@ Generator.prototype.appView = function appView() {
   this.template('app/appView.js', path.join(this.env.options.appPath, 'js', 'views/app.js'));
 };
 
+Generator.prototype.listView = function appView() {
+  this.ensureAppDir('js/views');
+  this.template('app/listView.js', path.join(this.env.options.appPath, 'js', 'views/list.js'));
+};
+
 Generator.prototype.mainStylesheet = function mainStylesheet() {
   this.template('main.css', this.env.options.appPath + '/css/main.css');
   this.template('main.less', this.env.options.appPath + '/less/main.less');
