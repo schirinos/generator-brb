@@ -32,7 +32,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
         parent: {},
         /**
          * Flag that tells whether to use the template's first child element as the view's root element or not.
-         * By default backbone views automatically creates a <div> to wrap the view. 
+         * By default backbone views automatically creates a <div> to wrap the view.
          * Setting this to true will use the first child in the template's html as the view's element.
          * @type {Boolean}
          */
@@ -66,7 +66,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             // to the DOM.
             this._rendering = $.Deferred();
 
-            // Generate a promise object for outsiders to 
+            // Generate a promise object for outsiders to
             // track when this view is added to the DOM.
             this.rendering = this._rendering.promise();
 
@@ -118,7 +118,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             options = _.extend({}, {animate: this.animate}, options);
 
             // Fire cleanUp event for the view.
-            // Child views that are attached without references in the 
+            // Child views that are attached without references in the
             // "views" property are cleaned up this way, because they just listen to
             // the cleanup event of their parent.
             // We need to force the child views listening to not to animate
@@ -152,7 +152,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
                 if (options.animate && options.animate.cleanUp) {
                     // TODO: Ability to specify more animations
                     // Fade out view
-                    //self.$el.fadeOut('fast'); 
+                    //self.$el.fadeOut('fast');
 
                     // NOTE: May cause flickering on some Safari,
                     // see the webkit-backface-visibility hack
@@ -161,7 +161,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
                 }
 
                 // Remove the view from the DOM once any animation is complete
-                // this also passes up the deffered object through the chain 
+                // this also passes up the deffered object through the chain
                 // so that to the caller so it knows when all animation is complete.
                 return self.$el.promise().done(function () {
                     // Remove the view
@@ -218,7 +218,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
                         // Create new dom element, and insert the template as innerhtml
                         var new_elem = document.createElement('div');
                         new_elem.innerHTML = this.template();
-                        
+
                         // Extract the first child of the dom element and use it as the view's new root element
                         this.setElement(new_elem.firstChild);
                     } else {
@@ -244,7 +244,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             this.preRender();
 
             // Was there a dom element passed we should immediately attach to?
-            // Do we animate the render portion? 
+            // Do we animate the render portion?
             if (domEl && this.animate && this.animate.render) {
                 // First we hide the view element
                 this.$el.css('opacity', 0);
@@ -309,7 +309,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             // for the view's DOM element, it will be fired when animation is complete
             // or immediately if no animation was done.
             this.$el.promise().done(function () {
-                // We start rendering child views once the 
+                // We start rendering child views once the
                 // main view is rendered.
                 self.renderChildren();
 
@@ -514,7 +514,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             this.$('[data-bind]').each(function (idx, elem) {
                 // Cache a copy of the jquery object for that element
                 self["$"+$(this).data("bind")] = $(this);
-                
+
                 // Attach the more precise selector, since it is lost by rewrapping element directly in jquery function ie: $(this)
                 self["$"+$(this).data("bind")].selector = this.tagName.toLowerCase() + '[data-bind="' + $(this).data("bind") + '"]';
             });
@@ -533,66 +533,18 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
             // Iterate through the "data-stickit" tags to find which attribute to observe
             this.$('[data-stickit]').each(function (idx, elem) {
 
-                // Generate the default attribute to observe and the selector key
-                var observe = $(this).attr("data-stickit");
-                var selector = '[data-stickit="'+ observe +'"]';
+                // Get stickit binding definition
+                var stickit = $(this).data('stickit');
 
-                // Check for advanced stickit options
-                var adv_opts = $(this).data("stickit-opts");
-                adv_opts = adv_opts ? adv_opts.split('|') : undefined;
-
-                // Iterate through advance options definitions
-                var opt_def = {};
-                _.each(adv_opts, function (opt) {
-                    // Split options into key value pairs
-                    var pairs = opt.split(":");
-
-                    // Treat an option without a key as the observe option
-                    if (pairs.length === 1) {
-                        opt_def.observe = pairs[0];
-                    }
-                    // All other options need keys defined
-                    else if (pairs.length > 1) {
-                        if (pairs[0] === 'visible' || pairs[0] === 'updateView') {
-                            // These options need to be converted to booleans
-                            opt_def[pairs[0]] = pairs[1] == 'false' ? false : true;
-                        } else {
-                            opt_def[pairs[0]] = pairs[1];
-                        }
-                    }
-                });
-
-                // Check for stickit attribute options
-                var attrs_opts = $(this).data('stickit-attrs');
-                attrs_opts = attrs_opts ? attrs_opts.split('|') : undefined;
-
-                // Iterate through attribute definitions
-                var attrs_def = [];
-                _.each(attrs_opts, function (def) {
-                    // Definition is divided into `name` and `observe` by a colon
-                    var parts = def.split(":");
-
-                    // Push on the new attribute definition
-                    attrs_def.push({name: parts[0], observe: parts[1]});
-                });
-
-                // No advanced options or attribute options, means we treat this 
-                // as the most basic stickit binding type.
-                // The stickit data tag value is the attribute on the model to observe
-                if (_.isEmpty(opt_def) && attrs_def.length < 1) {
-                    bindings[selector] = bindings[selector] || {};
-                    bindings[selector].observe = observe;
-                }
-                // Otherwise the user needs to have defined either advanced options or attribute options on the element
-                // for binding config the be generated properly.
-                else if (!_.isEmpty(opt_def) || attrs_def.length > 0) {
-                    bindings[selector] = bindings[selector] || {};
-                    bindings[selector] = _.extend(bindings[selector], opt_def);
-                    bindings[selector].attributes = attrs_def;
+                // Allow short-hand binding definition
+                if (_.isString(stickit)) {
+                    bindings['[data-stickit="'+stickit+'"]'] = stickit;
+                } else {
+                    bindings = _.extend(bindings, stickit);
                 }
             });
 
-            // Add the stickit bindings generated from markup to the ones already set in the 
+            // Add the stickit bindings generated from markup to the ones already set in the
             // view code. Binding keys already set in view code will not be overwritten by markup generated bindings.
             this.bindings = _.defaults(this.bindings, bindings);
         },
