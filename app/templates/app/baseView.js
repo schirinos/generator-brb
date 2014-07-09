@@ -521,19 +521,22 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
         },
         /**
          * Create stickit bindings from data-stickit attributes in the HTML and merge
-         * with any set on the view. This will create basic bindings.
+         * with any set on the view.
+         *
+         * You can specify a binding definition as a json string in the attribute.
+         * ex: data-stickit='{".item": {"attributes":[{"name": "href", "observe": "service_url"}]}}'
          */
         createStickitBindings: function () {
-            // For callbacks
-            var self = this;
-
             // Init empty bindings
             var bindings = {};
 
-            // Iterate through the "data-stickit" tags to find which attribute to observe
+            // Iterate through the "data-stickit" attributes to generate
+            // stickit bindings for the view.
             this.$('[data-stickit]').each(function (idx, elem) {
 
                 // Get stickit binding definition
+                // NOTE: jQuery data() will parse value
+                // automatically as json string into an object
                 var stickit = $(this).data('stickit');
 
                 // Allow short-hand binding definition
@@ -544,7 +547,7 @@ function(Backbone, TplLoading, TplAlert, TplInfo){
                 }
             });
 
-            // Add the stickit bindings generated from markup to the ones already set in the
+            // Add the stickit bindings generated from markup attributes to the ones already set in the
             // view code. Binding keys already set in view code will not be overwritten by markup generated bindings.
             this.bindings = _.defaults(this.bindings, bindings);
         },
