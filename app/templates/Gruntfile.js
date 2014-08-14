@@ -79,7 +79,8 @@ module.exports = function (grunt) {
             },
             dev: {
                 options: {
-                    script: '<%%= appConfig.server %>/server.js'
+                    script: '<%%= appConfig.server %>/server.js',
+                    node_env: 'development'
                 }
             },
             dist: {

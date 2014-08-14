@@ -3,7 +3,7 @@
 var express = require('express');
 var cluster = (require('cluster'));
 
-if(cluster.isMaster){
+if(cluster.isMaster && (process.env.NODE_ENV != 'development')){
     var cpuCount = require('os').cpus().length;
     for(var i = 0; i < cpuCount; i += 1){
         cluster.fork();

@@ -1,17 +1,17 @@
 define([
     'jquery',
     'underscore',
-    'views/base',
+    'backbone',
     'tpl!<%= templatePath %>'
-], function ($, _, BaseView, Tpl) {
+], function ($, _, Backbone, Tpl) {
     'use strict';
 
-    var <%= _.classify(name) %>View = BaseView.extend({
+    var <%= _.classify(name) %>View = Backbone.UberView.extend({
         template: Tpl,
         bindings: {},
         events: {},
         initialize: function () {
-            BaseView.prototype.initialize.apply(this, arguments);
+            Backbone.UberView.prototype.initialize.apply(this, arguments);
         }
     });
 

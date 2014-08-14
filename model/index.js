@@ -16,8 +16,8 @@ function Generator() {
     defaults: '/models'
   });
 
-  // Set whether to use custom base for model
-  this.option('base', {
+  // Set whether to use uberbackbone objects
+  this.option('uber', {
     type: Boolean,
     defaults: true
   });
@@ -41,8 +41,8 @@ Generator.prototype.createModelFiles = function createModelFiles() {
   // path to write file
   var modelPath = this.options.path;
 
-  if (this.options.base) {
-    this.writeTemplate('baseModel', path.join(this.env.options.appPath, '/js', modelPath, this.name));
+  if (this.options.uber) {
+    this.writeTemplate('uberModel', path.join(this.env.options.appPath, '/js', modelPath, this.name));
   } else {
     this.writeTemplate('model', path.join(this.env.options.appPath, '/js', modelPath, this.name));
   }

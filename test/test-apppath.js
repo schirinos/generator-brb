@@ -5,14 +5,14 @@ var helpers = require('yeoman-generator').test;
 var assert  = require('assert');
 var fs      = require('fs');
 
-describe('backbone generator with appPath option', function () {
+describe('Brb generator with appPath option', function () {
   beforeEach(function (done) {
     helpers.testDirectory(path.join(__dirname, './temp'), function (err) {
       if (err) {
         return done(err);
       }
       this.backbone = {};
-      this.backbone.app = helpers.createGenerator('backbone:app', [
+      this.backbone.app = helpers.createGenerator('brb:app', [
         '../../app', [
           helpers.createDummyGenerator(),
           'mocha:app'
@@ -26,7 +26,7 @@ describe('backbone generator with appPath option', function () {
 
       var out = [
         '{',
-        '  "generator-backbone": {',
+        '  "generator-brb": {',
         '    "appPath": "public",',
         '    "appName": "Temp"',
         '  }',

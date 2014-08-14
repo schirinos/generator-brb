@@ -6,9 +6,6 @@ require.config({
         bootstrap: {
             deps: ['jquery'],
             exports: 'jquery'
-        },
-        backboneNestedModel: {
-            deps: ['backbone']
         }<% if (templateFramework === 'handlebars') { %>,
         handlebars: {
             exports: 'Handlebars'
@@ -18,8 +15,7 @@ require.config({
         jquery: '../vendor/jquery/dist/jquery',
         backbone: '../vendor/backbone/backbone',
         backbonePkg: 'helpers/backbonePkg',
-        backboneStickit: '../vendor/backbone.stickit/backbone.stickit',
-        backboneNestedModel: '../vendor/backbone-nested-model/backbone-nested',
+        'backbone.stickit': '../vendor/backbone.stickit/backbone.stickit',
         tpl: '../vendor/requirejs-tpl/tpl',
         underscore: '../vendor/underscore/underscore',<% if (compassBootstrap) { %>,
         bootstrap: '../vendor/sass-bootstrap/dist/js/bootstrap'<% } else {%>
@@ -29,7 +25,9 @@ require.config({
 });
 
 require([
+    'backbone'
     'app'
-], function (App) {
-    App.init('#app');
+], function (Backbone, AppView) {
+    var appView = new AppView({el: $('#app'), model: new Backbone.UberModel()});
+    appView.render();
 });

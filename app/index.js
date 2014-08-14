@@ -160,35 +160,9 @@ Generator.prototype.backbonePkg = function backbonePkg() {
   this.template('app/backbonePkg.js', path.join(this.env.options.appPath, 'js', 'helpers/backbonePkg.js'));
 };
 
-Generator.prototype.baseView = function baseView() {
-  this.ensureAppDir('js/views');
-  this.template('app/baseView.js', path.join(this.env.options.appPath, 'js', 'views/base.js'));
-};
-
-Generator.prototype.tpls = function tpls() {
-  this.ensureAppDir('js/tpls');
-  this.template('app/loading.html', path.join(this.env.options.appPath, 'js', 'tpls/loading.html'));
-  this.template('app/alert.html', path.join(this.env.options.appPath, 'js', 'tpls/alert.html'));
-  this.template('app/info.html', path.join(this.env.options.appPath, 'js', 'tpls/info.html'));
-};
-
-Generator.prototype.baseModel = function baseModel() {
-  this.ensureAppDir('js/models');
-  this.template('app/baseModel.js', path.join(this.env.options.appPath, 'js', 'models/base.js'));
-};
-
-Generator.prototype.baseCollection = function baseCollection() {
-  this.ensureAppDir('js/collections');
-  this.template('app/baseCollection.js', path.join(this.env.options.appPath, 'js', 'collections/base.js'));
-};
-
 Generator.prototype.vent = function vent() {
   this.ensureAppDir('js/helpers');
   this.template('app/vent.js', path.join(this.env.options.appPath, 'js', 'helpers/vent.js'));
-};
-
-Generator.prototype.appBase = function appBase() {
-  this.template('app/appBase.js', path.join(this.env.options.appPath, 'js', 'app.js'));
 };
 
 Generator.prototype.appRouter = function appRouter() {
@@ -199,11 +173,6 @@ Generator.prototype.appRouter = function appRouter() {
 Generator.prototype.appView = function appView() {
   this.ensureAppDir('js/views');
   this.template('app/appView.js', path.join(this.env.options.appPath, 'js', 'views/app.js'));
-};
-
-Generator.prototype.listView = function appView() {
-  this.ensureAppDir('js/views');
-  this.template('app/listView.js', path.join(this.env.options.appPath, 'js', 'views/list.js'));
 };
 
 Generator.prototype.mainStylesheet = function mainStylesheet() {
@@ -244,7 +213,7 @@ Generator.prototype.createRequireJsAppFile = function createRequireJsAppFile() {
     if (!this.includeRequireJS) {
       return;
     }
-    this.template('requirejs_app.js', this.env.options.appPath + '/js/main.js');
+    this.template('requirejs_main.js', this.env.options.appPath + '/js/main.js');
 };
 
 Generator.prototype.h5bp = function h5bp() {

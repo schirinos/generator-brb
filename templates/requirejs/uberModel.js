@@ -1,15 +1,15 @@
 define([
-        'underscore',
-        'models/base'
+    'underscore',
+    'backbone'
 ],
-function (_, BaseModel) {
+function (_, Backbone) {
     'use strict';
 
-    var <%= _.classify(name) %>Model = BaseModel.extend({
+    var <%= _.classify(name) %>Model = Backbone.UberModel.extend({
         url: '',
 
         initialize: function() {
-            BaseModel.prototype.initialize.apply(this, arguments);
+            Backbone.UberModel.prototype.initialize.apply(this, arguments);
         },
 
         defaults: {

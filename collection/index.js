@@ -16,14 +16,14 @@ function Generator() {
     defaults: '/collections'
   });
 
-  // Set whether to use custom base for model
-  this.option('base', {
+  // Set whether to use uberbackbone objects
+  this.option('uber', {
     type: Boolean,
     defaults: true
   });
 
   var testOptions = {
-    as: 'collection`',
+    as: 'collection',
     args: [this.name],
     options: {
       ui: this.config.get('ui')
@@ -42,8 +42,8 @@ Generator.prototype.createControllerFiles = function createControllerFiles() {
   // path to write file
   var collPath = this.options.path;
 
-  if (this.options.base) {
-    this.writeTemplate('baseCollection', path.join(this.env.options.appPath, '/js', collPath, this.name));
+  if (this.options.uber) {
+    this.writeTemplate('uberCollection', path.join(this.env.options.appPath, '/js', collPath, this.name));
   } else {
     this.writeTemplate('collection', path.join(this.env.options.appPath, '/js', collPath, this.name));
   }

@@ -17,13 +17,13 @@ function Generator() {
   });
 
   // Set whether to use custom base for view
-  this.option('base', {
+  this.option('uber', {
     type: Boolean,
     defaults: true
   });
 
   var testOptions = {
-    as: 'collection`',
+    as: 'view',
     args: [this.name],
     options: {
       ui: this.config.get('ui')
@@ -45,10 +45,9 @@ Generator.prototype.createViewFiles = function createViewFiles() {
   this.templatePath = path.join(this.options.path, '../tpls', this.name + templateExt);
 
 
-  console.log(this.templatePath);
   // Create either standard backbone view or our custom augmented view
-  if (this.options.base) {
-    this.writeTemplate('baseView', path.join(this.env.options.appPath, '/js', viewPath, this.name));
+  if (this.options.uber) {
+    this.writeTemplate('uberView', path.join(this.env.options.appPath, '/js', viewPath, this.name));
   } else {
     this.writeTemplate('view', path.join(this.env.options.appPath, '/js', viewPath, this.name));
   }

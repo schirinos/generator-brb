@@ -33,8 +33,7 @@ function (Backbone, Vent){
          * Default route
          */
         defaultRoute: function (path){
-            // Render homepage view into main space
-            Vent.trigger('app:swapMain', 'home');
+
         }
     });
 

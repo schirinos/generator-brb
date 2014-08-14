@@ -1,15 +1,14 @@
 define([
-        'underscore',
-        'collections/base',
-        'models/base'
+    'underscore',
+    'backbone'
 ],
-function (_, BaseColl, BaseModel) {
+function (_, Backbone) {
     'use strict';
 
-    var <%= _.classify(name) %>Coll = BaseColl.extend({
+    var <%= _.classify(name) %>Coll = Backbone.UberCollection.extend({
         url: '',
 
-        model: BaseModel,
+        model: Backbone.UberModel,
 
         parse: function(response, options)  {
                 return response;

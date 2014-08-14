@@ -1,11 +1,11 @@
-/** 
+/**
     Helper module to load backbone plugins
     @module helpers/backbonePkg
  */
 define([
     'backbone',
-    'backboneStickit',
-    'backboneNestedModel'
+    'backbone.stickit',
+    'uberbackbone'
 ],
 function(Backbone){
     return Backbone;

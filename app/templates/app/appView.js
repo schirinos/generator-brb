@@ -4,35 +4,32 @@
     @extends BaseView
  */
 define([
-    'views/base',
-    'helpers/vent'
+    'backbone',
+    'helpers/vent',
+    'routers/app'
 ],
-function(BaseView, Vent){
+function(Backbone, Vent, AppRouter){
     /**
      * Automatically attaches child views when instantiated by calling <b>attachChildViews</b>
      * @constructor
      * @alias module:views/app
      * @param {Object} options Initialization options
      */
-    var exports = BaseView.extend({
+    var exports = Backbone.UberView.extend({
         /**
          * Automatically called upon object construction
          */
         initialize: function (options) {
             // Call parent to to setup stuff
-            BaseView.prototype.initialize.apply(this, arguments);
+            Backbone.UberView.prototype.initialize.apply(this, arguments);
 
-            // Subscribe events to swap things in the main view area
-            this.listenTo(Vent, 'app:swapMain', this.swapMain);
+            // Setup our app container to listen for events
+            this.listenTo(Vent, 'app:swapView', this.swapView);
 
-            // Attach global subviews such as Header and Footers
-        },
-        /**
-         * Swap out the main view of the app
-         * @param {string} key Name of the view to swap into the main area.
-         */
-        swapMain: function (key) {
-            
+            // Create the app router and kickoff app
+            // routing by starting history
+            this.appRouter = new AppRouter();
+            Backbone.history.start({root: '/', pushState: true});
         }
     });
 
