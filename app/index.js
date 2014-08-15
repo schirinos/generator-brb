@@ -172,7 +172,7 @@ Generator.prototype.appRouter = function appRouter() {
 
 Generator.prototype.appView = function appView() {
   this.ensureAppDir('js/views');
-  this.template('app/appView.js', path.join(this.env.options.appPath, 'js', 'views/app.js'));
+  this.template('app/appView.js', path.join(this.env.options.appPath, 'js', 'app.js'));
 };
 
 Generator.prototype.mainStylesheet = function mainStylesheet() {
