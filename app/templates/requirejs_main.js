@@ -25,7 +25,7 @@ require.config({
 });
 
 require([
-    'backbone'
+    'backbonePkg',
     'app'
 ], function (Backbone, AppView) {
     var appView = new AppView({el: $('#app'), model: new Backbone.UberModel()});
