@@ -43,8 +43,8 @@ Generator.prototype.createControllerFiles = function createControllerFiles() {
   var collPath = this.options.path;
 
   if (this.options.uber) {
-    this.writeTemplate('uberCollection', path.join(this.env.options.appPath, '/js', collPath, this.name));
+    this.writeTemplate('uberCollection', path.join(this.env.options.appPath, '/js', collPath, this.name + 'Coll'));
   } else {
-    this.writeTemplate('collection', path.join(this.env.options.appPath, '/js', collPath, this.name));
+    this.writeTemplate('collection', path.join(this.env.options.appPath, '/js', collPath, this.name + 'Coll));
   }
 };

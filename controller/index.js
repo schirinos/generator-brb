@@ -23,7 +23,7 @@ function Generator() {
   });
 
   var testOptions = {
-    as: 'model',
+    as: 'controller',
     args: [this.name],
     options: {
       ui: this.config.get('ui')
@@ -41,5 +41,5 @@ Generator.prototype.createControllerFiles = function createControllerFiles() {
   // path to write file
   var controllerPath = this.options.path;
 
-  this.writeTemplate('controller', path.join(this.env.options.appPath, '/js', controllerPath, this.name));
+  this.writeTemplate('controller', path.join(this.env.options.appPath, '/js', controllerPath, this.name + 'Ctrl));
 };

@@ -42,8 +42,8 @@ Generator.prototype.createModelFiles = function createModelFiles() {
   var modelPath = this.options.path;
 
   if (this.options.uber) {
-    this.writeTemplate('uberModel', path.join(this.env.options.appPath, '/js', modelPath, this.name));
+    this.writeTemplate('uberModel', path.join(this.env.options.appPath, '/js', modelPath, this.name + 'Model'));
   } else {
-    this.writeTemplate('model', path.join(this.env.options.appPath, '/js', modelPath, this.name));
+    this.writeTemplate('model', path.join(this.env.options.appPath, '/js', modelPath, this.name + 'Model'));
   }
 };

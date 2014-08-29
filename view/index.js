@@ -42,14 +42,14 @@ Generator.prototype.createViewFiles = function createViewFiles() {
   var viewPath = this.options.path;
   var templateFramework = this.getTemplateFramework();
   var templateExt = '.html';
-  this.templatePath = path.join(this.options.path, '../tpls', this.name + templateExt);
+  this.templatePath = path.join(this.options.path, this.name + templateExt);
 
 
   // Create either standard backbone view or our custom augmented view
   if (this.options.uber) {
-    this.writeTemplate('uberView', path.join(this.env.options.appPath, '/js', viewPath, this.name));
+    this.writeTemplate('uberView', path.join(this.env.options.appPath, '/js', viewPath, this.name + 'View'));
   } else {
-    this.writeTemplate('view', path.join(this.env.options.appPath, '/js', viewPath, this.name));
+    this.writeTemplate('view', path.join(this.env.options.appPath, '/js', viewPath, this.name+ 'View'));
   }
 
   // Write template file for the view
