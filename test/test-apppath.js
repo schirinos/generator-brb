@@ -17,7 +17,7 @@ describe('Brb generator with appPath option', function () {
           helpers.createDummyGenerator(),
           'mocha:app'
         ]
-      ], ['temp'], {appPath: 'public'});
+      ], ['temp'], {appPath: 'src/public'});
       this.backbone.app.options['skip-install'] = true;
 
       helpers.mockPrompt(this.backbone.app, {
@@ -27,7 +27,7 @@ describe('Brb generator with appPath option', function () {
       var out = [
         '{',
         '  "generator-brb": {',
-        '    "appPath": "public",',
+        '    "appPath": "src/public",',
         '    "appName": "Temp"',
         '  }',
         '}'

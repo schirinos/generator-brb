@@ -15,7 +15,7 @@ require.config({
         jquery: '../vendor/jquery/dist/jquery',
         backbone: '../vendor/backbone/backbone',
         backbonePkg: 'helpers/backbonePkg',
-        'backbone.stickit': '../vendor/backbone.stickit/backbone.stickit',
+        rivets: '../vendor/rivets/dist/rivets',
         tpl: '../vendor/requirejs-tpl/tpl',
         underscore: '../vendor/underscore/underscore',<% if (compassBootstrap) { %>,
         bootstrap: '../vendor/sass-bootstrap/dist/js/bootstrap'<% } else {%>
