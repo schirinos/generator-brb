@@ -60,7 +60,7 @@ These sub-generators will create application objects and generate test stubs.
 * brb:router
 
 ### Sub Generator Options
-* `--path`
+* `--path=<path/to/dir>`
 
   Specify the location of where to create the applicaiton object. Use to create logical module groupings for your application objects. 
   ie: put all your collections, models and views for a video in the same folder.
@@ -70,7 +70,7 @@ $ yo brb:model video --path=path/to/dir
 
 ```
 
-* `--uber`
+* `--uber=<true|false>`
 
   Defaults to true. Whether to create application objects using [uberbackbone](https://github.com/schirinos/uberbackbone). 
   Set this option to false, to use plain Backbone objects.
