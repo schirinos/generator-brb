@@ -10,7 +10,7 @@
     "uberbackbone": "https://github.com/schirinos/uberbackbone.git",
     "requirejs": "~2.1.11",
     "requirejs-text": "~2.0.10",
-    "backbone.stickit": "~0.8.0",
+    "rivets": "~0.6.10",
     "modernizr": "~2.7.1"<% if (templateFramework === 'handlebars') { %>,
     "handlebars": "~1.3.0",
     "require-handlebars-plugin": "0.8.0"<% } else if (templateFramework === 'mustache') { %>,

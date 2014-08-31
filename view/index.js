@@ -1,57 +1,60 @@
 /*jshint latedef:false */
 var path = require('path');
-var util = require('util');
 var yeoman = require('yeoman-generator');
 var scriptBase = require('../script-base');
 
-module.exports = Generator;
+var BrbGenerator = scriptBase.extend({
+  constructor: function () {
+    scriptBase.apply(this, arguments);
 
-function Generator() {
-  scriptBase.apply(this, arguments);
+    // Location to write view
+    this.option('path', {
+      type: String,
+      required: false,
+      defaults: '/views'
+    });
 
-  // Location to write view
-  this.option('path', {
-    type: String,
-    required: false,
-    defaults: '/views'
-  });
+    // Set whether to use uberbackbone objects
+    this.option('uber', {
+      type: Boolean,
+      defaults: true
+    });
 
-  // Set whether to use custom base for view
-  this.option('uber', {
-    type: Boolean,
-    defaults: true
-  });
+  },
 
-  var testOptions = {
-    as: 'view',
-    args: [this.name],
-    options: {
-      ui: this.config.get('ui')
+  createViewFiles: function () {
+    // path to write file
+    var filePath = path.join(this.env.options.appPath, '/js', this.options.path, this.name + 'View');
+    var templateFramework = this.getTemplateFramework();
+    var templateExt = '.html';
+    this.templatePath = path.join(this.options.path, this.name + templateExt).replace(/^\//, '');
+
+    // Which collection template to use
+    var template = 'view';
+    if (this.options.uber) {
+      template = 'uberView';
     }
-  };
 
-  if (this.generateTests()) {
-    this.hookFor('backbone-mocha', testOptions);
+    // Write the view file
+    this.writeTemplate(template, filePath);
+
+    // Write template file for the view
+    this.template('view.html', path.join(this.env.options.appPath, '/js', this.templatePath));
+
+    // Generate test stubs
+    if (this.generateTests()) {
+      var testOptions = {
+        type: 'View',
+        name: this.name,
+        testPath: this.env.options.testPath,
+        path: this.options.path,
+        moduleSrc: path.join(this.options.path, this.name + 'View').replace(/^\//, '')
+      };
+
+      this.writeTest(testOptions);
+    }
   }
 
-}
+});
 
-util.inherits(Generator, scriptBase);
-
-Generator.prototype.createViewFiles = function createViewFiles() {
-  var viewPath = this.options.path;
-  var templateFramework = this.getTemplateFramework();
-  var templateExt = '.html';
-  this.templatePath = path.join(this.options.path, this.name + templateExt);
-
-
-  // Create either standard backbone view or our custom augmented view
-  if (this.options.uber) {
-    this.writeTemplate('uberView', path.join(this.env.options.appPath, '/js', viewPath, this.name + 'View'));
-  } else {
-    this.writeTemplate('view', path.join(this.env.options.appPath, '/js', viewPath, this.name+ 'View'));
-  }
-
-  // Write template file for the view
-  this.template('view.html', path.join(this.env.options.appPath, '/js', this.templatePath));
-};
+module.exports = BrbGenerator;

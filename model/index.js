@@ -1,49 +1,54 @@
 /*jshint latedef:false */
 var path = require('path');
-var util = require('util');
 var yeoman = require('yeoman-generator');
 var scriptBase = require('../script-base');
 
-module.exports = Generator;
+var BrbGenerator = scriptBase.extend({
+  constructor: function () {
+    scriptBase.apply(this, arguments);
 
-function Generator() {
-  scriptBase.apply(this, arguments);
+    // Location to write model
+    this.option('path', {
+      type: String,
+      required: false,
+      defaults: '/models'
+    });
 
-  // Location to write model
-  this.option('path', {
-    type: String,
-    required: false,
-    defaults: '/models'
-  });
+    // Set whether to use uberbackbone objects
+    this.option('uber', {
+      type: Boolean,
+      defaults: true
+    });
 
-  // Set whether to use uberbackbone objects
-  this.option('uber', {
-    type: Boolean,
-    defaults: true
-  });
+  },
 
-  var testOptions = {
-    as: 'model',
-    args: [this.name],
-    options: {
-      ui: this.config.get('ui')
+  createModelFiles: function () {
+    // path to write file
+    var filePath = path.join(this.env.options.appPath, '/js', this.options.path, this.name + 'Model');
+
+    // Which collection template to use
+    var template = 'model';
+    if (this.options.uber) {
+      template = 'uberModel';
     }
-  };
 
-  if (this.generateTests()) {
-    this.hookFor('backbone-mocha', testOptions);
+    // Write the template
+    this.writeTemplate(template, filePath);
+
+    // Generate test stubs
+    if (this.generateTests()) {
+      var testOptions = {
+        type: 'Model',
+        name: this.name,
+        testPath: this.env.options.testPath,
+        path: this.options.path,
+        moduleSrc: path.join(this.options.path, this.name + 'Model').replace(/^\//, '')
+      };
+
+      this.writeTest(testOptions);
+    }
   }
-}
 
-util.inherits(Generator, scriptBase);
+});
 
-Generator.prototype.createModelFiles = function createModelFiles() {
-  // path to write file
-  var modelPath = this.options.path;
-
-  if (this.options.uber) {
-    this.writeTemplate('uberModel', path.join(this.env.options.appPath, '/js', modelPath, this.name + 'Model'));
-  } else {
-    this.writeTemplate('model', path.join(this.env.options.appPath, '/js', modelPath, this.name + 'Model'));
-  }
-};
+module.exports = BrbGenerator;

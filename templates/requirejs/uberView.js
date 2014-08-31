@@ -1,7 +1,7 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
+    'backbonePkg',
     'tpl!<%= templatePath %>'
 ], function ($, _, Backbone, Tpl) {
     'use strict';

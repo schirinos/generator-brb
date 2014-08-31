@@ -32,7 +32,12 @@
     "connect-livereload": "~0.3.2",
     "time-grunt": "~0.2.8",
     "jshint-stylish": "~0.1.5",
-    "grunt-express-server": "^0.4.17"
+    "grunt-express-server": "^0.4.17",
+    "karma": "^0.12.23",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.1.4",
+    "karma-mocha": "^0.1.9",
+    "karma-requirejs": "^0.2.2"
   },
   "engines": {
     "node": ">=0.10.0"

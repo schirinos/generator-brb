@@ -4,7 +4,6 @@
  */
 define([
     'backbone',
-    'backbone.stickit',
     'uberbackbone'
 ],
 function(Backbone){

@@ -1,31 +1,42 @@
 /*jshint latedef:false */
 var path = require('path'),
-  util = require('util'),
   yeoman = require('yeoman-generator'),
   scriptBase = require('../script-base');
 
-module.exports = Generator;
 
-function Generator() {
-  scriptBase.apply(this, arguments);
-  var dirPath = '../templates';
-  this.sourceRoot(path.join(__dirname, dirPath));
+var BrbGenerator = scriptBase.extend({
 
-  var testOptions = {
-    as: 'router',
-    args: [this.name],
-    options: {
-      ui: this.config.get('ui')
+  constructor: function () {
+    scriptBase.apply(this, arguments);
+
+    // Location to write router
+    this.option('path', {
+      type: String,
+      required: false,
+      defaults: '/routers'
+    });
+
+  },
+
+  createRouterFiles: function () {
+    // path to write file
+    var filePath = path.join(this.env.options.appPath, '/js', this.options.path, this.name + 'Router');
+    this.writeTemplate('router', filePath);
+
+    // Generate test stubs
+    if (this.generateTests()) {
+      var testOptions = {
+        type: 'Router',
+        name: this.name,
+        testPath: this.env.options.testPath,
+        path: this.options.path,
+        moduleSrc: path.join(this.options.path, this.name + 'Router').replace(/^\//, '')
+      };
+
+      this.writeTest(testOptions);
     }
-  };
-
-  if (this.generateTests()){
-    this.hookFor('backbone-mocha', testOptions);
   }
-}
 
-util.inherits(Generator, scriptBase);
+});
 
-Generator.prototype.createControllerFiles = function createControllerFiles() {
-  this.writeTemplate('router', path.join(this.env.options.appPath + '/js/routes', this.name));
-};
+module.exports = BrbGenerator;
