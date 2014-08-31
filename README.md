@@ -1,6 +1,6 @@
-# Backbone Require, Bootstrap web app generator
+# Brb (Backbone Require, Bootstrap) web app generator
 
-[Yeoman](http://yeoman.io) generator that scaffolds out a Backbone, Require, Bootstrap web app.
+[Yeoman](http://yeoman.io) generator that scaffolds out a Backbone, RequireJs, Bootstrap web app.
 
 ## Features
 
@@ -9,9 +9,9 @@
 * Automagically lint your scripts
 * Automagically wire up your Bower components with [grunt-bower-require](#third-party-dependencies).
 * Awesome Image Optimization (via OptiPNG, pngquant, jpegtran and gifsicle)
-* Mocha Unit Testing with PhantomJS
+* Mocha Unit Testing
+* Karma test runner configured for RequireJs
 * Bootstrap for Sass (Optional)
-* Leaner Modernizr builds (Optional)
 
 For more information on what `generator-brb` can do for you, take a look at the [Grunt tasks](https://github.com/schirinos/generator-brb/blob/master/app/templates/_package.json) used in the `package.json`.
 
@@ -22,6 +22,35 @@ For more information on what `generator-brb` can do for you, take a look at the 
 - Run: `yo brb`
 - Run `grunt` for building and `grunt serve` for preview.
 
+## Sub Generators
+
+These sub-generators will create application objects and generate test stubs.
+* brb:controller
+* brb:collection
+* brb:model
+* brb:view
+* brb:router
+
+### Sub Generator Options
+* `--path`
+
+  Specify the location of where to create the applicaiton object. Use to create logical module groupings for your application objects. 
+  ie: put all your collections, models and views for a video in the same folder.
+
+```sh
+$ yo brb:model video --path=path/to/dir
+
+```
+
+* `--uber` (on by default)
+
+  Whether to create application objects using [uberbackbone](https://github.com/schirinos/uberbackbone). 
+  By default uberbackbone will be used. You can set this option to false, to use plain Backbone objects.
+
+```sh
+$ yo brb:model video --uber=false
+
+```
 
 #### Third-Party Dependencies
 
@@ -37,11 +66,9 @@ $ grunt bower
 
 This works if the package author has followed the [Bower spec](https://github.com/bower/bower.json-spec). If the files are not automatically added to your source code, check with the package's repo for support and/or file an issue with them to have it updated.
 
-To manually add dependencies, `bower install --save depName` to get the files, then add a the reference to the requirejs config file **public/js/main.js**
+To manually add dependencies, `bower install --save depName` to get the files, then add a the reference to the requirejs config file **src/public/js/main.js**
 
 The components are installed at `/src/public/vendor`.
-
-*Testing Note*: a project checked into source control and later checked out needs to have `bower install` run from the `test` folder as well as from the project root.
 
 ## Options
 
