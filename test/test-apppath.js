@@ -68,7 +68,7 @@ describe('Brb generator with appPath option', function () {
 
   describe('Backbone Model', function () {
     it('creates backbone model', function (done) {
-      var model = helpers.createGenerator('backbone:model', ['../../model'], ['foo']);
+      var model = helpers.createGenerator('brb:model', ['../../model'], ['foo']);
 
       this.backbone.app.run({}, function () {
         model.run([], function () {
@@ -83,7 +83,7 @@ describe('Brb generator with appPath option', function () {
 
   describe('Backbone Collection', function () {
     it('creates backbone collection', function (done) {
-      var collection = helpers.createGenerator('backbone:collection', ['../../collection'], ['foo']);
+      var collection = helpers.createGenerator('brb:collection', ['../../collection'], ['foo']);
 
       this.backbone.app.run({}, function () {
         collection.run([], function () {
@@ -98,7 +98,7 @@ describe('Brb generator with appPath option', function () {
 
   describe('Backbone Router', function () {
     it('creates backbone router', function (done) {
-      var router = helpers.createGenerator('backbone:router', ['../../router'], ['foo']);
+      var router = helpers.createGenerator('brb:router', ['../../router'], ['foo']);
 
       this.backbone.app.run({}, function () {
         router.run([], function () {
@@ -113,7 +113,7 @@ describe('Brb generator with appPath option', function () {
 
   describe('Backbone View', function () {
     it('creates backbone view', function (done) {
-      var view = helpers.createGenerator('backbone:view', ['../../view'], ['foo']);
+      var view = helpers.createGenerator('brb:view', ['../../view'], ['foo']);
 
       this.backbone.app.run({}, function () {
         view.run([], function () {
