@@ -22,6 +22,34 @@ For more information on what `generator-brb` can do for you, take a look at the 
 - Run: `yo brb`
 - Run `grunt` for building and `grunt serve` for preview.
 
+#### Third-Party Dependencies
+
+*(HTML/CSS/JS/Images/etc)*
+
+Third-party dependencies are managed with bower. Add new dependencies using **Bower** and then run the **Grunt** task to load them into
+your RequireJs config file:
+
+```sh
+$ bower install --save jquery
+$ grunt bower
+```
+
+This works if the package author has followed the [Bower spec](https://github.com/bower/bower.json-spec). If the files are not automatically added to your source code, check with the package's repo for support and/or file an issue with them to have it updated.
+
+To manually add dependencies, `bower install --save depName` to get the files, then add a the reference to the requirejs config file **src/public/js/main.js**
+
+The components are installed at `/src/public/vendor`.
+
+## Options
+
+* `--skip-install`
+
+  Skips the automatic execution of `bower` and `npm` after scaffolding has finished.
+
+* `--test-framework=<framework>`
+
+  Defaults to `mocha`. Can be switched for another supported testing framework like `jasmine`.
+
 ## Sub Generators
 
 These sub-generators will create application objects and generate test stubs.
@@ -51,34 +79,6 @@ $ yo brb:model video --path=path/to/dir
 $ yo brb:model video --uber=false
 
 ```
-
-#### Third-Party Dependencies
-
-*(HTML/CSS/JS/Images/etc)*
-
-Third-party dependencies are managed with bower. Add new dependencies using **Bower** and then run the **Grunt** task to load them into
-your RequireJs config file:
-
-```sh
-$ bower install --save jquery
-$ grunt bower
-```
-
-This works if the package author has followed the [Bower spec](https://github.com/bower/bower.json-spec). If the files are not automatically added to your source code, check with the package's repo for support and/or file an issue with them to have it updated.
-
-To manually add dependencies, `bower install --save depName` to get the files, then add a the reference to the requirejs config file **src/public/js/main.js**
-
-The components are installed at `/src/public/vendor`.
-
-## Options
-
-* `--skip-install`
-
-  Skips the automatic execution of `bower` and `npm` after scaffolding has finished.
-
-* `--test-framework=<framework>`
-
-  Defaults to `mocha`. Can be switched for another supported testing framework like `jasmine`.
 
 ## License
 
