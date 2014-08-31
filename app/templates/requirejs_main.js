@@ -16,6 +16,7 @@ require.config({
         backbone: '../vendor/backbone/backbone',
         backbonePkg: 'helpers/backbonePkg',
         rivets: '../vendor/rivets/dist/rivets',
+        uberbackbone: '../vendor/uberbackbone/uberbackbonerivets',
         tpl: '../vendor/requirejs-tpl/tpl',
         underscore: '../vendor/underscore/underscore',<% if (compassBootstrap) { %>,
         bootstrap: '../vendor/sass-bootstrap/dist/js/bootstrap'<% } else {%>
