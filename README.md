@@ -70,10 +70,10 @@ $ yo brb:model video --path=path/to/dir
 
 ```
 
-* `--uber` (on by default)
+* `--uber`
 
-  Whether to create application objects using [uberbackbone](https://github.com/schirinos/uberbackbone). 
-  By default uberbackbone will be used. You can set this option to false, to use plain Backbone objects.
+  Defaults to true. Whether to create application objects using [uberbackbone](https://github.com/schirinos/uberbackbone). 
+  Set this option to false, to use plain Backbone objects.
 
 ```sh
 $ yo brb:model video --uber=false
