@@ -29,6 +29,7 @@ var BrbControllerGenerator = scriptBase.extend({
         type: 'Controller',
         name: this.name,
         testPath: this.env.options.testPath,
+        path: this.options.path,
         moduleSrc: path.join(this.options.path, this.name + 'Ctrl').replace(/^\//, '')
       };
 
