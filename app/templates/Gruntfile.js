@@ -86,7 +86,8 @@ module.exports = function (grunt) {
             dist: {
                 options: {
                     background: false,
-                    script: '<%%= appConfig.dist %>/server/server.js'
+                    script: '<%%= appConfig.dist %>/server/server.js',
+                    node_env: 'development'
                 }
             }
         }<% } %>,
@@ -322,7 +323,7 @@ module.exports = function (grunt) {
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
             <% if (useServer) { %>
-                return grunt.task.run(['build', 'open:server', 'express:dev']);
+                return grunt.task.run(['build', 'open:server', 'express:dist']);
             <%} else {%>
                 return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
             <%}%>
