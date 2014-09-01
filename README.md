@@ -12,6 +12,8 @@
 * Mocha Unit Testing
 * Karma test runner configured for RequireJs
 * Bootstrap for Sass (Optional)
+* PHP or node server scaffolding (Optional)
+* Vagrantfile generation with scaffolding for Puppet and Chef (Optional)
 
 For more information on what `generator-brb` can do for you, take a look at the [Grunt tasks](https://github.com/schirinos/generator-brb/blob/master/app/templates/_package.json) used in the `package.json`.
 
@@ -79,6 +81,17 @@ $ yo brb:model video --path=path/to/dir
 $ yo brb:model video --uber=false
 
 ```
+
+## Vagrantfile
+
+Chosing the Vagrantfile option will generate a Vagrantfile and the folder **vagarant**.  
+This folder has two subfolders.
+One is setup for use with standalone Puppet provisioner and a Puppetfile (libriarian-puppet).
+The other is setup for Chef cookbook management using Berkshelf. 
+
+**NOTE:** When using Berkshelf, run the **berks vendor** command to install the cookbooks into the
+berks-cookbooks folder in the repo. Otherwise Berkshelf installs the cookbooks to your global Berkshelf file path.
+The Vagrantfile is preconfigured to look in **vagrant/chef/berks-cookbooks** folder.
 
 ## License
 
