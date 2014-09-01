@@ -109,9 +109,15 @@ var BrbGenerator = yeoman.generators.Base.extend({
       }
 
       this.template('Vagrantfile', 'Vagrantfile');
+
+      // Add Puppet scaffolding
       this.mkdir('vagrant/puppet/modules');
       this.mkdir('vagrant/puppet/manifests');
       this.template('Puppetfile', 'vagrant/puppet/Puppetfile');
+
+      // Add Chef scaffolding
+      this.mkdir('vagrant/chef/cookbooks');
+      this.template('Berksfile', 'vagrant/chef/Berksfile');
     },
 
     bower : function bower() {

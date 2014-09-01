@@ -34,12 +34,59 @@ Vagrant.configure("2") do |config|
   # argument is a set of non-required options.
   config.vm.synced_folder  '.', '/vagrant', :nfs => true
 
+  # The path to the Berksfile to use with Vagrant Berkshelf
+  # config.berkshelf.berksfile_path = "./vagrant/chef/Berksfile"
+
+  # Enabling the Berkshelf plugin. To enable this globally, add this configuration
+  # option to your ~/.vagrant.d/Vagrantfile file
+  # config.berkshelf.enabled = true
+
+  # An array of symbols representing groups of cookbook described in the Vagrantfile
+  # to exclusively install and copy to Vagrant's shelf.
+  # config.berkshelf.only = []
+
+  # An array of symbols representing groups of cookbook described in the Vagrantfile
+  # to skip installing and copying to Vagrant's shelf.
+  # config.berkshelf.except = []
+
+  # Chef provisionser
+  # config.vm.provision :chef_solo do |chef|
+  #   chef.json = {
+  #     :webapp => {
+  #       :app_name => webapp_name,
+  #       :phpmyadmin => true,
+  #       :php => {
+  #         :directives => {
+  #           "cgi.fix_pathinfo"  => 0
+  #         }
+  #       }
+  #     },
+  #     :mariadb => {
+  #       :remove_anonymous_users => true,
+  #       :allow_remote_root => true,
+  #       :remove_test_database => true,
+  #       :server_root_password => 'webapp!',
+  #       :server_repl_password => 'webapp!',
+  #       :server_debian_password => 'webapp!'
+  #     },
+  #     :nginx => {
+  #       :sendfile => 'off',
+  #       :install_method => 'package',
+  #       :default_site_enabled => false
+  #     }
+  #   }
+
+  #   Set which recipes to run
+  #   chef.add_recipe "apt"
+  #   chef.add_recipe "webapp::default"
+  # end
+
   # Puppet standalone provisioner
-  config.vm.provision :puppet do |puppet|
-    puppet.module_path = "vagrant/puppet/modules"
-    puppet.manifests_path = "vagrant/puppet/manifests"
-    puppet.manifest_file  = "init.pp"
-    #puppet.options = "--verbose --debug"
-  end
+  # config.vm.provision :puppet do |puppet|
+  #   puppet.module_path = "vagrant/puppet/modules"
+  #   puppet.manifests_path = "vagrant/puppet/manifests"
+  #   puppet.manifest_file  = "init.pp"
+  #   puppet.options = "--verbose --debug"
+  # end
 
 end
