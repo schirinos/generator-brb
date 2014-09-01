@@ -28,6 +28,7 @@
     "grunt-requirejs": "~0.4.0",
     "grunt-rev": "~0.1.0",
     "grunt-open": "~0.2.3",
+    "grunt-php": "^0.4.0",
     "load-grunt-tasks": "~0.3.0",
     "connect-livereload": "~0.3.2",
     "time-grunt": "~0.2.8",

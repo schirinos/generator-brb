@@ -17,7 +17,8 @@ module.exports = function (grunt) {
     var appConfig = {
         pub: '<%= env.options.appPath %>'<% if (useServer) { %>,
         server: '<%= env.options.serverPath %>'<% } %>,
-        dist: 'dist'
+        dist: 'dist',
+        absoluteDir: __dirname
     };
 
     grunt.initConfig({
@@ -316,6 +317,17 @@ module.exports = function (grunt) {
         bower: {
             app: {
                 rjsConfig: '<%%= appConfig.pub %>/js/main.js'
+            }
+        },
+        // Runs php dev server to server API
+        php: {
+            api: {
+                options: {
+                    keepalive: true,
+                    open: true,
+                    base: '<%%= appConfig.absoluteDir %>/src/server/www',
+                    router: '<%%= appConfig.absoluteDir %>/src/server/www/routing.php'
+                }
             }
         }
     });
