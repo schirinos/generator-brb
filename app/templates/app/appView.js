@@ -4,7 +4,7 @@
     @extends BaseView
  */
 define([
-    'backbone',
+    'backbonePkg',
     'helpers/vent',
     'routers/app'
 ],
