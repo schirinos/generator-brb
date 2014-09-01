@@ -116,7 +116,6 @@ var BrbGenerator = yeoman.generators.Base.extend({
       this.template('Puppetfile', 'vagrant/puppet/Puppetfile');
 
       // Add Chef scaffolding
-      this.mkdir('vagrant/chef/cookbooks');
       this.template('Berksfile', 'vagrant/chef/Berksfile');
     },
 
