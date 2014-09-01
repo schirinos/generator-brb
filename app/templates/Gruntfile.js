@@ -319,6 +319,7 @@ module.exports = function (grunt) {
                 rjsConfig: '<%%= appConfig.pub %>/js/main.js'
             }
         },
+        <% if (useServer === 'php') { %>
         // Runs php dev server to server API
         php: {
             api: {
@@ -330,6 +331,7 @@ module.exports = function (grunt) {
                 }
             }
         }
+        <% } %>
     });
 
     grunt.registerTask('serve', function (target) {

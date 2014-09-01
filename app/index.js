@@ -2,7 +2,6 @@
 var path = require('path');
 var fs = require('fs');
 var yeoman = require('yeoman-generator');
-var scriptBase = require('../script-base');
 var backboneUtils = require('../util.js');
 var exec = require('child_process').exec;
 
@@ -10,7 +9,7 @@ var BrbGenerator = yeoman.generators.Base.extend({
 
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
-  
+    console.log(this.sourceRoot());
     // Get name of application, we use this as the namespace for the
     // modules we create.
     this.argument('appname', { type: String, required: false });
@@ -63,13 +62,23 @@ var BrbGenerator = yeoman.generators.Base.extend({
         value: 'compassBootstrap',
         checked: false
       },{
-        name: 'Vagrant',
+        name: 'Vagrantfile',
         value: 'vagrant',
         checked: false
+      }]
+    },{
+      type: 'list',
+      name: 'server',
+      message: 'Would you like a server setup?',
+      choices: [{
+        name: 'No server',
+        value: ''
       },{
-        name: 'nodejs Server',
-        value: 'useServer',
-        checked: false
+        name: 'node',
+        value: 'node'
+      },{
+        name: 'php',
+        value: 'php'
       }]
     }];
 
@@ -83,8 +92,8 @@ var BrbGenerator = yeoman.generators.Base.extend({
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
       this.compassBootstrap = hasFeature('compassBootstrap');
       this.vagrant = hasFeature('vagrant');
-      this.useServer = hasFeature('useServer');
       this.includeRequireJS = true;
+      this.useServer = answers.server
 
       // Set prompts
       this.config.set('compassBootstrap', this.compassBootstrap);
@@ -194,14 +203,20 @@ var BrbGenerator = yeoman.generators.Base.extend({
       this.mkdir(this.env.options.appPath + '/img');
       this.write(this.env.options.appPath + '/index.html', this.indexFile);
 
-      if (this.useServer) {
+      // Generate server side code folders
+      if (this.useServer === 'node') {
         this.mkdir(this.env.options.serverPath);
         this.template('app/server.js', path.join(this.env.options.serverPath, 'server.js'));
         this.template('app/routes.js', path.join(this.env.options.serverPath, 'routes.js'));
         this.template('app/config.js', path.join(this.env.options.serverPath, 'config.js'));
-      }
+      } else if (this.useServer === 'php') {
+        this.mkdir(path.join(this.env.options.serverPath, 'www'));
+        this.mkdir(path.join(this.env.options.serverPath, 'lib'));
+        this.copy('routing.php', path.join(this.env.options.serverPath, 'www', 'routing.php'));
+        this.copy('composer.json', path.join(this.env.options.serverPath, 'composer.json'));
+      } 
 
-      // Creating testing directory
+      // Create testing directory
       this.mkdir('test/spec');
     },
 
