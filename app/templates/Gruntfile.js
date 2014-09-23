@@ -54,7 +54,7 @@ module.exports = function (grunt) {
                     '<%%= appConfig.pub %>/img/{,*/}*.{png,jpg,jpeg,gif,webp}',
                     'test/spec/**/*.js'
                 ]
-            }<% if (useServer) { %>,
+            }<% if (useServer === 'node') { %>,
             // For the express server reload we don't need to livereload the page
             // since the express server serves the backend api
             express: {
@@ -65,6 +65,10 @@ module.exports = function (grunt) {
                 },
                 files: ['<%%= appConfig.server %>/{,*/}*.js'],
                 tasks:  ['express:dev']
+            }<% } else if (useServer === 'php')%>
+            phptest: {
+                files: ['<%= appConfig.server %>/lib/**/*.php', 'test/server/tests/**/*.php'],
+                tasks: ['exec:phptest']
             }<% } %>,
             test: {
                 files: ['<%%= appConfig.server %>/{,*/}*.js', '<%%= appConfig.pub %>/js/{,*/}*.js', 'test/spec/**/*.js'],
@@ -322,13 +326,25 @@ module.exports = function (grunt) {
         <% if (useServer === 'php') { %>
         // Runs php dev server to server API
         php: {
-            api: {
+            serve: {
                 options: {
                     keepalive: true,
                     open: true,
-                    base: '<%%= appConfig.absoluteDir %>/src/server/www',
+                    base: '<%%= appConfig.absoluteDir %>/src/public',
                     router: '<%%= appConfig.absoluteDir %>/src/server/www/routing.php'
                 }
+            },
+            watch: {
+                options: {
+                    base: '<%= appConfig.absoluteDir %>/src/public',
+                    router: '<%= appConfig.absoluteDir %>/src/server/www/routing.php'
+                }
+            }
+        },
+        exec: {
+            phptest: {
+                cmd: '../../vendor/bin/codecept run --debug --steps --xml --html',
+                cwd: 'test/server/'
             }
         }
         <% } %>
@@ -336,8 +352,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            <% if (useServer) { %>
+            <% if (useServer === 'node') { %>
                 return grunt.task.run(['build', 'open:server', 'express:dist']);
+            <%} else if (useServer === 'php') {%>
+                eturn grunt.task.run(['build', 'open:server', 'php:serve']);
             <%} else {%>
                 return grunt.task.run(['build', 'open:server', 'connect:dist:keepalive']);
             <%}%>
@@ -349,7 +367,12 @@ module.exports = function (grunt) {
                     'clean:server',
                     'connect:test',
                     'open:test',
+                    <% if (useServer === 'node') { %>
                     'watch'
+                    <%} else if (useServer === 'php') {%>
+                    'php:watch',
+                    'watch'
+                    <%}%>
                 ]);
             }
         <%} else {%>
@@ -368,7 +391,12 @@ module.exports = function (grunt) {
             grunt.task.run([
                 'clean:server',
                 'open:server',
+                <% if (useServer === 'node') { %>
                 'watch'
+                <%} else if (useServer === 'php') {%>
+                'php:watch',
+                'watch'
+                <%}%>
             ]);
         <%} else {%>
             grunt.task.run([
@@ -386,7 +414,10 @@ module.exports = function (grunt) {
         var testTasks = [
                 'clean:server',
                 'connect:test',
-                'mocha',
+                'mocha'
+                <% if (useServer === 'php') { %>,
+                'exec:phptest'
+                <%}%>
             ];
 
         if(!isConnected) {
@@ -397,6 +428,8 @@ module.exports = function (grunt) {
             return grunt.task.run(testTasks);
         }
     });
+
+    grunt.registerTask('test:php', ['exec:phptest']);
 
     grunt.registerTask('build', [
         'clean:dist',<% if (compassBootstrap) { %>

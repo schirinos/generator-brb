@@ -9,7 +9,7 @@ var BrbGenerator = yeoman.generators.Base.extend({
 
   constructor: function () {
     yeoman.generators.Base.apply(this, arguments);
-    console.log(this.sourceRoot());
+
     // Get name of application, we use this as the namespace for the
     // modules we create.
     this.argument('appname', { type: String, required: false });
@@ -213,6 +213,7 @@ var BrbGenerator = yeoman.generators.Base.extend({
         this.mkdir(path.join(this.env.options.serverPath, 'www'));
         this.mkdir(path.join(this.env.options.serverPath, 'lib'));
         this.copy('routing.php', path.join(this.env.options.serverPath, 'www', 'routing.php'));
+        this.copy('index.php', path.join(this.env.options.serverPath, 'www', 'index.php'));
         this.copy('composer.json', path.join(this.env.options.serverPath, 'composer.json'));
       } 
 
